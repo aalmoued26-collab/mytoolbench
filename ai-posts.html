@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AI Marketing Post Generator — Toolbench</title>
+<meta name="description" content="Generate a whole campaign of professional, creative branded marketing posts — heritage, cinematic, and luxury concepts with Arabic calligraphy and AI imagery. Free.">
+<link rel="canonical" href="https://mytoolbench.co/ai-posts">
+<meta name="robots" content="index,follow">
+<meta property="og:title" content="AI Marketing Post Generator — Toolbench">
+<meta property="og:description" content="A full campaign of creative branded posts, out of the box. Free.">
+<meta property="og:url" content="https://mytoolbench.co/ai-posts">
+<meta property="og:site_name" content="Toolbench">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect x='4' y='4' width='24' height='24' rx='6' fill='none' stroke='%2316171B' stroke-width='3'/><rect x='11' y='11' width='10' height='10' rx='2' fill='%232B41D8'/></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Aref+Ruqaa:wght@400;700&family=Amiri:wght@400;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"AI Marketing Post Generator","url":"https://mytoolbench.co/ai-posts.html","applicationCategory":"DesignApplication","operatingSystem":"Any (web browser)","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}</script>
+</head>
+<body>
+<div id="site-header"></div>
+
+<main class="wrap page">
+  <p class="crumb"><a href="index.html">Toolbench</a> &nbsp;/&nbsp; AI Studio &nbsp;/&nbsp; AI Marketing Post Generator</p>
+  <div class="tool-head rise"><span class="chip">AI Studio · Free</span></div>
+  <h1 class="title rise d1">AI Marketing Post Generator</h1>
+  <p class="subtitle rise d2">Generate a whole campaign of creative, on-brand posts in one click — heritage, cinematic and luxury concepts, each different, with sharp Arabic calligraphy and your logo.</p>
+
+  <div class="rise d3">
+  <div class="panel">
+    <p class="panel-label">1 · Brand</p>
+    <div class="row">
+      <div><label class="field">Logo (transparent PNG best)</label><input type="file" id="ps-logo" accept="image/*" style="padding:10px"></div>
+      <div><label class="field">Colour theme</label>
+        <select id="ps-palette"></select></div>
+      <div><label class="field">Size</label>
+        <select id="ps-size"><option value="4:5">Portrait (4:5)</option><option value="1:1">Square (1:1)</option><option value="9:16">Story (9:16)</option></select></div>
+    </div>
+    <div class="row" id="ps-customRow" style="margin-top:12px;display:none">
+      <div><label class="field">Main colour</label><input type="color" id="ps-c1" value="#10233f" style="padding:4px;height:44px"></div>
+      <div><label class="field">Accent colour</label><input type="color" id="ps-c2" value="#d9b667" style="padding:4px;height:44px"></div>
+      <div><span class="hint" style="margin:0;align-self:center">Pick any two colours — used across every post.</span></div>
+    </div>
+    <div id="ps-logoprev" style="margin-top:10px;display:none"><img id="ps-logoimg" alt="Logo" style="max-height:60px;background:#eee;border-radius:8px;padding:4px"></div>
+  </div>
+
+  <div class="panel">
+    <p class="panel-label">2 · What you're marketing</p>
+    <div class="row">
+      <div><label class="field">Product / dish</label><input type="text" id="ps-dish" placeholder="e.g. chicken spring rolls with sumac" value="chicken spring rolls"></div>
+      <div><label class="field">Brand line (Arabic subline)</label><input type="text" id="ps-sub" dir="rtl" value="ماما نورة - طعم البيت"></div>
+    </div>
+    <div class="row" style="margin-top:12px">
+      <div><label class="field">Your product photo <span style="color:var(--faint)">(optional — keeps your real product)</span></label><input type="file" id="ps-food" accept="image/*" style="padding:10px"></div>
+    </div>
+    <div id="ps-foodprev" style="margin-top:10px;display:none"><img id="ps-foodimg" alt="Product" style="max-height:110px;border:1px solid var(--line);border-radius:8px;background:#fff"></div>
+  </div>
+
+  <div class="panel">
+    <p class="panel-label">3 · Creative direction</p>
+    <div class="row">
+      <div><label class="field">Style</label>
+        <select id="ps-style">
+          <option value="surprise">✨ Surprise me (mixed creative)</option>
+          <option value="modern">Modern &amp; clean</option>
+          <option value="bold">Bold &amp; punchy</option>
+          <option value="minimal">Minimalist</option>
+          <option value="editorial">Editorial / magazine</option>
+          <option value="cinematic">Cinematic story</option>
+          <option value="luxury">Luxury concept</option>
+          <option value="heritage">Heritage frame (Sadu + gold)</option>
+          <option value="festive">Festive / celebration</option>
+        </select></div>
+      <div><label class="field">How many posts</label>
+        <select id="ps-count"><option>3</option><option selected>4</option><option>6</option></select></div>
+      <div><label class="check" style="margin-top:26px"><input type="checkbox" id="ps-auto" checked> Auto creative headlines</label></div>
+    </div>
+    <div class="row" style="margin-top:12px">
+      <div><label class="field">Arabic headline <span style="color:var(--faint)">(used if auto is off)</span></label><input type="text" id="ps-arh" dir="rtl" placeholder="نكهة من قلب التراث"></div>
+      <div><label class="field">English headline (optional)</label><input type="text" id="ps-enh" placeholder="Authentic Kuwaiti Heritage"></div>
+      <div><label class="check" style="margin-top:26px"><input type="checkbox" id="ps-notext"> Some no-text posts</label>
+        <label class="check" style="margin-top:8px"><input type="checkbox" id="ps-seal"> “Made in Kuwait” seal</label></div>
+    </div>
+    <div class="controls">
+      <button class="btn btn-primary" id="ps-make">Generate campaign</button>
+      <span class="hint" id="ps-status" style="margin:0;align-self:center"></span>
+    </div>
+    <p class="hint">Each run makes several *different* creative posts. Takes ~30–60s per post.</p>
+  </div>
+
+  <div class="panel" id="ps-resultPanel" style="display:none">
+    <p class="panel-label">Your campaign</p>
+    <div id="ps-gallery" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:14px"></div>
+  </div>
+  </div>
+
+  <div class="ad-slot"><div class="ph">AD SLOT &mdash; add your AdSense code here</div></div>
+  <section class="prose" style="margin-top:40px">
+    <h2>About the marketing post generator</h2>
+    <p>Give it your logo, product and a creative direction, and it generates a whole set of distinct, professional posts — heritage frames with gold Sadu borders, cinematic hero shots, luxury concept treatments and flat-lays — each with sharp Arabic calligraphy and your branding composed as clean layers. Upload your real product photo to keep it authentic, or let the AI create the imagery. Download the ones you love.</p>
+    <p>Free to use. AI imagery is generated on a secure service; your logo and text stay in your browser.</p>
+  </section>
+</main>
+<div id="site-footer"></div>
+<script src="app.js"></script>
+<script src="tb-store.js"></script>
+<script src="posts.js"></script>
+<script>
+(function(){
+  var logoData=null, foodData=null;
+  try{ logoData=localStorage.getItem('tb_brand_logo'); if(logoData){document.getElementById('ps-logoimg').src=logoData;document.getElementById('ps-logoprev').style.display='';} }catch(e){}
+  document.getElementById('ps-logo').onchange=function(e){var f=e.target.files[0];if(!f)return;if(f.size>4*1024*1024){window.toast('Logo under 4 MB');return;}
+    var r=new FileReader();r.onload=function(){logoData=r.result;document.getElementById('ps-logoimg').src=logoData;document.getElementById('ps-logoprev').style.display='';try{localStorage.setItem('tb_brand_logo',logoData);}catch(_){}};r.readAsDataURL(f);};
+  document.getElementById('ps-food').onchange=function(e){var f=e.target.files[0];if(!f)return;if(f.size>8*1024*1024){window.toast('Image under 8 MB');return;}
+    var r=new FileReader();r.onload=function(){foodData=r.result;document.getElementById('ps-foodimg').src=foodData;document.getElementById('ps-foodprev').style.display='';};r.readAsDataURL(f);};
+
+  // ---- populate colour themes (from posts.js) + Auto + Custom ----
+  (function fillThemes(){
+    var sel=document.getElementById('ps-palette'), T=window.POST_THEMES||{};
+    var html='';
+    Object.keys(T).forEach(function(k){ html+='<option value="'+k+'">'+(T[k].name||k)+'</option>'; });
+    html+='<option value="auto">🎨 Auto from my logo</option><option value="custom">Custom colours…</option>';
+    sel.innerHTML=html; sel.value='navy';
+    sel.onchange=function(){ document.getElementById('ps-customRow').style.display=(this.value==='custom')?'':'none'; };
+  })();
+
+  // ---- resolve the palette the user chose (key string, or a colour object) ----
+  function loadImage(src){ return new Promise(function(res){ if(!src)return res(null); var im=new Image(); im.onload=function(){res(im);}; im.onerror=function(){res(null);}; im.src=src; }); }
+  async function resolvePalette(){
+    var v=document.getElementById('ps-palette').value;
+    if(v==='custom'){
+      var c1=document.getElementById('ps-c1').value, c2=document.getElementById('ps-c2').value;
+      function lum(h){h=h.replace('#','');var n=parseInt(h,16);return (n>>16&255)*0.3+(n>>8&255)*0.59+(n&255)*0.11;}
+      function shade(h,f){h=h.replace('#','');var n=parseInt(h,16);var r=Math.round((n>>16&255)*f),g=Math.round((n>>8&255)*f),b=Math.round((n&255)*f);return '#'+[r,g,b].map(function(x){return('0'+x.toString(16)).slice(-2);}).join('');}
+      return { bg:c1, accent:c2, text:(lum(c1)<140?'#f5ead4':'#20140c'), band:shade(c1,0.7) };
+    }
+    if(v==='auto'){
+      if(!logoData){ window.toast('Upload a logo first for auto colours — using Navy'); return 'navy'; }
+      var img=await loadImage(logoData); var pal=img&&window.paletteFromImage(img);
+      return pal||'navy';
+    }
+    return v; // theme key
+  }
+
+  // ---- creative concept library (brand-agnostic image prompts) ----
+  function P(product, extra){ return product+', '+extra+', professional commercial photography, ultra-detailed, photorealistic, no text, no watermark, no logo'; }
+  var CONCEPTS={
+    studio_clean:   {mode:'bold',      orn:'geo',  p:function(d){return P(d,'centered on a clean seamless studio background in the brand colour, soft studio shadow, crisp modern commercial product shot, bright');}},
+    gradient_studio:{mode:'editorial', orn:'plain',p:function(d){return P(d,'floating on a smooth colour gradient studio backdrop, soft reflection, sleek modern advertising look, high-end');}},
+    fresh_ingredients:{mode:'bold',    orn:'geo',  p:function(d){return P(d,'surrounded by fresh vibrant ingredients bursting around it, bright top-down, energetic and colourful commercial food photography');}},
+    pastel_soft:    {mode:'minimal',   orn:'plain',p:function(d){return P(d,'on a soft pastel background with gentle natural light and delicate props, airy minimalist modern styling');}},
+    neon_night:     {mode:'editorial', orn:'geo',  p:function(d){return P(d,'on a dark moody background with dramatic coloured rim lighting and subtle glow, bold modern night mood, premium');}},
+    marble_product: {mode:'minimal',   orn:'plain',p:function(d){return P(d,'on a bright marble surface with a few elegant props, clean premium, bright and airy editorial');}},
+    dark_dramatic:  {mode:'cinematic', orn:'geo',  p:function(d){return P(d,'on a dark background with dramatic side light and gentle rising steam, premium close-up, elegant appetizing');}},
+    splash_hero:    {mode:'bold',      orn:'geo',  p:function(d){return P(d,'with ingredients and garnish dynamically splashing and floating around it, dramatic studio lighting, high-energy commercial');}},
+    rustic_board:   {mode:'frame',     orn:'sadu', p:function(d){return P(d,'beautifully plated on a rustic dark wooden board with fresh herbs and a small dip, warm moody cinematic lighting, appetizing');}},
+    flatlay:        {mode:'editorial', orn:'plain',p:function(d){return P(d,'elegant top-down flat lay with scattered fresh ingredients and props on a textured surface, warm editorial styling');}},
+    luxury_pedestal:{mode:'editorial', orn:'plain',p:function(d){return P(d,'presented on a pedestal under a dramatic spotlight like a luxury product, dark elegant minimalist editorial background, high-end');}},
+    luxury_cloche:  {mode:'cinematic', orn:'plain',p:function(d){return P(d,'a white-gloved waiter presenting it on a silver platter, luxury fine-dining, elegant editorial');}},
+    festive_table:  {mode:'frame',     orn:'geo',  p:function(d){return P(d,'on a festive celebration table with warm string lights and elegant decorations, joyful premium mood');}},
+    market_scene:   {mode:'cinematic', orn:'sadu', p:function(d){return P(d,'presented at a vibrant traditional market stall at golden hour, authentic warm cinematic');}},
+    heritage_hands: {mode:'cinematic', orn:'sadu', p:function(d){return P(d,'close-up of hands lovingly preparing it at a rustic table, warm window light, emotional cinematic, shallow depth of field');}}
+  };
+  var GROUPS={
+    surprise:  ['studio_clean','dark_dramatic','marble_product','gradient_studio','fresh_ingredients','luxury_pedestal','pastel_soft','splash_hero'],
+    modern:    ['studio_clean','gradient_studio','neon_night','fresh_ingredients','pastel_soft'],
+    bold:      ['splash_hero','fresh_ingredients','studio_clean','neon_night'],
+    minimal:   ['pastel_soft','marble_product','studio_clean','gradient_studio'],
+    editorial: ['gradient_studio','luxury_pedestal','flatlay','marble_product','neon_night'],
+    cinematic: ['dark_dramatic','luxury_cloche','market_scene','heritage_hands'],
+    luxury:    ['luxury_pedestal','luxury_cloche','gradient_studio','splash_hero'],
+    heritage:  ['rustic_board','heritage_hands','flatlay','festive_table','market_scene'],
+    festive:   ['festive_table','fresh_ingredients','splash_hero','market_scene']
+  };
+  var LAYOUT={ frame:'renderHeritagePost', cinematic:'renderCinematicPost', minimal:'renderMinimalPost', bold:'renderBoldPost', editorial:'renderEditorialPost' };
+
+  var AR_POOL=['نكهة لا تُقاوم','جديدنا وصل','الطعم الأصيل','لذّة في كل قضمة','جودة تستحقها','طازج كل يوم','صُنع بحب','ألذّ لحظات يومك','اطلبه الآن','الأفضل لعائلتك'];
+  var EN_POOL=['Taste the Difference','Freshly Made, Every Day','Crafted with Care','Your New Favourite','Quality You Can Taste','Made for Moments','Bold Flavour, Real Ingredients','Simply Irresistible'];
+  function autoAr(i){ return AR_POOL[i%AR_POOL.length]; }
+  function autoEn(dish,i){ var t=['Introducing '+cap(dish),cap(dish)+', done right','The '+cap(dish)+' you deserve']; return (i%3===0)? t[i%t.length] : EN_POOL[i%EN_POOL.length]; }
+  function cap(s){ return s? s.charAt(0).toUpperCase()+s.slice(1) : s; }
+
+  function pickKeys(style, n){ var g=GROUPS[style]||GROUPS.surprise, out=[]; for(var i=0;i<n;i++) out.push(g[i%g.length]); return out; }
+  function genImage(prompt, ref){
+    return fetch('/api/post-image',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({prompt:prompt, refDataUrl:ref||undefined})})
+      .then(function(x){return x.json().then(function(j){if(!x.ok)throw new Error(j.error||'image failed');return j.dataUrl;});});
+  }
+
+  document.getElementById('ps-make').onclick=async function(){
+    var dish=document.getElementById('ps-dish').value.trim(); if(!dish){window.toast('Enter your product / dish');return;}
+    var style=document.getElementById('ps-style').value, n=+document.getElementById('ps-count').value;
+    var auto=document.getElementById('ps-auto').checked, someNoText=document.getElementById('ps-notext').checked;
+    var showSeal=document.getElementById('ps-seal').checked;
+    var manualAr=document.getElementById('ps-arh').value.trim(), manualEn=document.getElementById('ps-enh').value.trim();
+    var sub=document.getElementById('ps-sub').value.trim();
+    var size=document.getElementById('ps-size').value;
+    var st=document.getElementById('ps-status'), btn=this, gallery=document.getElementById('ps-gallery');
+    gallery.innerHTML=''; document.getElementById('ps-resultPanel').style.display=''; btn.disabled=true;
+    var palette=await resolvePalette();
+    var keys=pickKeys(style,n);
+    for(var i=0;i<keys.length;i++){
+      st.textContent='Generating post '+(i+1)+' of '+keys.length+'…';
+      var concept=CONCEPTS[keys[i]]||CONCEPTS.studio_clean;
+      var arH = auto ? autoAr(i) : manualAr;
+      var enH = auto ? autoEn(dish,i) : manualEn;
+      var showText = !(someNoText && i%3===2);
+      try{
+        var img=await genImage(concept.p(dish), foodData);
+        var render=window[LAYOUT[concept.mode]]||window.renderCinematicPost;
+        var url=await render({ size:size, palette:palette, ornament:concept.orn,
+          logoDataUrl:logoData, imageDataUrl:img, foodDataUrl:img,
+          arHeadline:showText?arH:'', arSub:showText?sub:'', enHeadline:showText?enH:'',
+          showText:showText, showSeal:showSeal });
+        var card=document.createElement('div');
+        card.innerHTML='<img src="'+url+'" style="width:100%;border:1px solid var(--line);border-radius:12px;background:#fff">'+
+          '<div class="hint" style="margin:6px 0 4px">'+concept.mode+' · '+keys[i].replace(/_/g,' ')+'</div>'+
+          '<a class="btn btn-ghost btn-sm" href="'+url+'" download="post-'+(i+1)+'.png">Download</a>';
+        gallery.appendChild(card);
+      }catch(e){ window.toast(String(e.message||e)); }
+    }
+    btn.disabled=false; st.textContent='Campaign ready'; window.toast('Campaign ready');
+  };
+})();
+</script>
+</body>
+</html>

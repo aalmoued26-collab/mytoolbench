@@ -1,0 +1,4 @@
+BUILD: v5-36-tools (AI Studio)
+33 browser tools + 3 AI Studio tools (character, talking video, packaging).
+If you can read this on your live site, the AI-enabled version is deployed.
+Note: the 3 AI tools need Netlify env vars FAL_KEY and ELEVENLABS_API_KEY.

@@ -1,0 +1,5 @@
+Upload the ENTIRE contents of this folder to Netlify.
+index.html must end up at the top level of your site.
+
+Each .html file now has the design built INSIDE it,
+so the site looks correct even if other files are missed.

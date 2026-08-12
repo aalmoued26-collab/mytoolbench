@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AI Two-Character Scene — Toolbench</title>
+<meta name="description" content="Put two of your saved AI characters together in one realistic photo or video — same faces, one scene. Free.">
+<link rel="canonical" href="https://mytoolbench.co/ai-duo">
+<meta name="robots" content="index,follow">
+<meta property="og:title" content="AI Two-Character Scene — Toolbench">
+<meta property="og:description" content="Two characters together in one realistic photo or video. Free.">
+<meta property="og:url" content="https://mytoolbench.co/ai-duo">
+<meta property="og:site_name" content="Toolbench">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect x='4' y='4' width='24' height='24' rx='6' fill='none' stroke='%2316171B' stroke-width='3'/><rect x='11' y='11' width='10' height='10' rx='2' fill='%232B41D8'/></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>
+  .talkcol{display:flex;flex-direction:column}
+  .talkcol select,.talkcol textarea,.talkcol input{width:100%;box-sizing:border-box}
+  #du-scene,#du-scenePreset{width:100%;box-sizing:border-box}
+</style>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"AI Two-Character Scene","url":"https://mytoolbench.co/ai-duo.html","applicationCategory":"MultimediaApplication","operatingSystem":"Any (web browser)","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}</script>
+</head>
+<body>
+<div id="site-header"></div>
+
+<main class="wrap page">
+  <p class="crumb"><a href="index.html">Toolbench</a> &nbsp;/&nbsp; AI Studio &nbsp;/&nbsp; AI Two-Character Scene</p>
+  <div class="tool-head rise"><span class="chip">AI Studio · Free</span></div>
+  <h1 class="title rise d1">AI Two-Character Scene</h1>
+  <p class="subtitle rise d2">Put two of your saved characters together in one realistic scene — same faces — then animate it into a short clip.</p>
+
+  <div class="rise d3">
+  <div class="panel">
+    <p class="panel-label">1 · Pick two characters</p>
+    <div class="row">
+      <div>
+        <label class="field">Character A</label>
+        <select id="du-a"><option value="">— saved character —</option></select>
+        <div id="du-ashots" class="checks" style="margin-top:8px"></div>
+        <input type="text" id="du-outfitA" placeholder="Outfit for A (optional) e.g. green traditional dress, apron" style="margin-top:8px">
+      </div>
+      <div>
+        <label class="field">Character B</label>
+        <select id="du-b"><option value="">— saved character —</option></select>
+        <div id="du-bshots" class="checks" style="margin-top:8px"></div>
+        <input type="text" id="du-outfitB" placeholder="Outfit for B (optional) e.g. white shirt, chef jacket" style="margin-top:8px">
+      </div>
+    </div>
+    <p class="hint">Build and save characters in the <a href="ai-character.html">Character Studio</a> first. Click a shot under each to choose the exact saved picture to use for the video — only that photo is used, not all of them.</p>
+  </div>
+
+  <div class="panel">
+    <p class="panel-label">2 · Scene, framing &amp; action</p>
+    <div class="row">
+      <div><label class="field">What are they doing together?</label><input type="text" id="du-action" placeholder="e.g. cooking samosas together, laughing at the table"></div>
+      <div><label class="field">Framing / style</label>
+        <select id="du-framing">
+          <option value="">Natural (default)</option>
+          <option value="selfie">Selfie / vlog POV (one holds the phone)</option>
+          <option value="overshoulder">Over-the-shoulder (cinematic)</option>
+          <option value="twoshot">Clean two-shot (side by side)</option>
+        </select></div>
+      <div><label class="field">Shape</label>
+        <select id="du-aspect"><option value="9:16">Story / Reels (9:16)</option><option value="4:5">Portrait (4:5)</option><option value="1:1">Square</option><option value="16:9">Wide</option></select></div>
+    </div>
+    <div style="margin-top:12px">
+      <label class="field">Background / location — type anything</label>
+      <input type="text" id="du-scene" placeholder="e.g. a luxury modern restaurant kitchen, marble counters, soft cinematic light">
+      <select id="du-scenePreset" style="margin-top:8px">
+        <option value="">— or pick a preset to fill it —</option>
+        <option value="a traditional antique Arabic kitchen, copper pots, warm golden light">Antique Arabic kitchen</option>
+        <option value="an Andalusian-style house with arches and zellige tiles, warm daylight">Andalusian house</option>
+        <option value="a traditional Gulf majlis with patterned cushions and brass coffee pots">Traditional majlis</option>
+        <option value="a rustic old-world kitchen with warm window light">Rustic kitchen</option>
+        <option value="a sleek modern professional restaurant kitchen, stainless steel, cinematic light">Modern restaurant kitchen</option>
+        <option value="a bright upscale cafe interior, big windows, plants, professional look">Upscale cafe</option>
+        <option value="a busy vibrant street food market at golden hour">Street food market</option>
+        <option value="clean studio with soft light">Clean studio</option>
+      </select>
+    </div>
+    <div class="controls">
+      <button class="btn btn-primary" id="du-make">Generate together</button>
+      <span class="hint" id="du-status" style="margin:0;align-self:center"></span>
+    </div>
+  </div>
+
+  <div class="panel" id="du-resultPanel" style="display:none">
+    <p class="panel-label">Step A — the keyframe photo (this is the first frame of your video, not the final clip)</p>
+    <img id="du-result" alt="Two characters" style="width:100%;max-width:520px;border:1px solid var(--line);border-radius:10px;background:#fff">
+    <p class="hint" style="margin-top:10px"><b>This is a still.</b> Press the button below to turn it into the moving vlog video.</p>
+    <div class="controls">
+      <button class="btn btn-primary" id="du-animate">▶ Make the vlog video</button>
+      <a class="btn btn-ghost btn-sm" id="du-download" download="two-characters.png">Download the still</a>
+      <span class="hint" id="du-vstatus" style="margin:0;align-self:center"></span>
+    </div>
+    <video id="du-video" controls playsinline style="width:100%;max-width:520px;border:1px solid var(--line);border-radius:10px;background:#000;margin-top:12px;display:none"></video>
+    <div class="controls" id="du-vdl" style="display:none"><a class="btn btn-ghost btn-sm" id="du-vdownload" download="two-characters.mp4">Download video</a></div>
+    <p class="hint" style="margin-top:12px">This clip is the b-roll of them together in the place. To make each one actually <b>talk</b> (lip-synced), use the panel below — do A, then B, then cut them together with this clip.</p>
+  </div>
+
+  <div class="panel" id="du-talkPanel" style="display:none">
+    <p class="panel-label">3 · Make them talk (lip-synced)</p>
+    <p class="hint" style="margin-top:0">Give each character their voice and their line. Record your own voice and it's converted to that voice (speech-to-speech), or just type the line. You get a lip-synced clip per person — one talks at a time, exactly like a real vlog cut.</p>
+    <div class="row">
+
+      <div class="talkcol">
+        <label class="field">Character A — voice</label>
+        <select id="du-voiceA"><option value="">— loading voices —</option></select>
+        <label class="field" style="margin-top:10px">Talk in</label>
+        <select id="du-srcA"><option value="shot">Close-up of A (best lip-sync)</option><option value="scene">The scene (both in frame)</option></select>
+        <label class="field" style="margin-top:10px">Line for A (Arabic or English)</label>
+        <textarea id="du-scriptA" rows="2" placeholder="Type A's line… or record below"></textarea>
+        <div class="controls" style="margin-top:8px">
+          <button class="btn btn-ghost btn-sm" id="du-recA" type="button">● Record A</button>
+          <audio id="du-recAudioA" controls style="display:none;height:34px"></audio>
+        </div>
+        <div class="controls" style="margin-top:8px">
+          <button class="btn btn-primary btn-sm" id="du-talkA" type="button">Make A talk</button>
+          <span class="hint" id="du-statusA" style="margin:0;align-self:center"></span>
+        </div>
+        <video id="du-videoA" controls playsinline style="width:100%;border:1px solid var(--line);border-radius:10px;background:#000;margin-top:10px;display:none"></video>
+        <div class="controls" id="du-dlA" style="display:none"><a class="btn btn-ghost btn-sm" id="du-vdlA" download="character-A-talking.mp4">Download A clip</a></div>
+      </div>
+
+      <div class="talkcol">
+        <label class="field">Character B — voice</label>
+        <select id="du-voiceB"><option value="">— loading voices —</option></select>
+        <label class="field" style="margin-top:10px">Talk in</label>
+        <select id="du-srcB"><option value="shot">Close-up of B (best lip-sync)</option><option value="scene">The scene (both in frame)</option></select>
+        <label class="field" style="margin-top:10px">Line for B (Arabic or English)</label>
+        <textarea id="du-scriptB" rows="2" placeholder="Type B's line… or record below"></textarea>
+        <div class="controls" style="margin-top:8px">
+          <button class="btn btn-ghost btn-sm" id="du-recB" type="button">● Record B</button>
+          <audio id="du-recAudioB" controls style="display:none;height:34px"></audio>
+        </div>
+        <div class="controls" style="margin-top:8px">
+          <button class="btn btn-primary btn-sm" id="du-talkB" type="button">Make B talk</button>
+          <span class="hint" id="du-statusB" style="margin:0;align-self:center"></span>
+        </div>
+        <video id="du-videoB" controls playsinline style="width:100%;border:1px solid var(--line);border-radius:10px;background:#000;margin-top:10px;display:none"></video>
+        <div class="controls" id="du-dlB" style="display:none"><a class="btn btn-ghost btn-sm" id="du-vdlB" download="character-B-talking.mp4">Download B clip</a></div>
+      </div>
+
+    </div>
+    <p class="hint">Tip: recording your own delivery (then speech-to-speech) syncs the mouth most naturally. Put the three clips — the together b-roll, A talking, B talking — into any editor (CapCut works on your phone) to finish the vlog.</p>
+  </div>
+  </div>
+
+  <div class="ad-slot"><div class="ph">AD SLOT &mdash; add your AdSense code here</div></div>
+  <section class="prose" style="margin-top:40px">
+    <h2>About the two-character scene tool</h2>
+    <p>Choose two characters you built in the Character Studio, pick the exact saved photo to use for each, give them outfits, type any background/location and a framing style, and the tool composes them into one photorealistic scene together — keeping each face recognizable. You can then animate the scene into a short clip. Great for a grandmother and granddaughter cooking, a founder and a customer, or a two-person selfie vlog.</p>
+    <p>For a <b>vlog</b>, choose the “Selfie / vlog POV” framing so one character holds the phone and both faces are in frame, then hit Animate for the handheld motion. A true camera-flip where two people trade spoken lines in one continuous shot isn’t something today’s AI can render as a single clip — the reliable way is to animate this scene for the b-roll, then use the Talking Video tool to make each person speak their line lip-synced, and cut those together in any editor.</p>
+    <p>Free to use. Note: putting two AI faces in one shot is harder than one — pick clear front-facing shots for the best likeness, and expect the still image to hold identity better than the animated clip.</p>
+  </section>
+</main>
+<div id="site-footer"></div>
+<script src="app.js"></script>
+<script src="tb-store.js"></script>
+<script>
+(function(){
+  var imgA=null, imgB=null, comboUrl=null, charA=null, charB=null, libVoices=[];
+  function fill(sel){ var list=window.TBStore.listCharacters();
+    sel.innerHTML='<option value="">— saved character —</option>'+list.map(function(c){return '<option value="'+c.id+'">'+(c.name||'Character')+'</option>';}).join(''); }
+  fill(document.getElementById('du-a')); fill(document.getElementById('du-b'));
+
+  function wire(selId, boxId, set, setChar){
+    document.getElementById(selId).onchange=function(){
+      var c=window.TBStore.getCharacter(this.value); var box=document.getElementById(boxId); box.innerHTML='';
+      setChar(c||null);
+      if(!c||!c.shots)return;
+      c.shots.forEach(function(s,i){
+        var btn=document.createElement('button'); btn.className='check'; btn.style.padding='4px';
+        btn.innerHTML='<img src="'+s.url+'" style="width:60px;height:60px;object-fit:cover;border-radius:6px">';
+        btn.onclick=function(){ set(s.url); box.querySelectorAll('button').forEach(function(x){x.classList.remove('on');}); btn.classList.add('on'); };
+        box.appendChild(btn); if(i===0) btn.click();
+      });
+      buildVoicePickers();
+    };
+  }
+  wire('du-a','du-ashots',function(u){imgA=u;},function(c){charA=c;});
+  wire('du-b','du-bshots',function(u){imgB=u;},function(c){charB=c;});
+
+  /* ---- voices: character's own + ElevenLabs library + Toolbench-saved ---- */
+  function esc(s){ return String(s||'').replace(/[<>&"]/g,function(m){return {'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;'}[m];}); }
+  function catLabel(c){ return c==='cloned'?'Cloned':c==='generated'?'Designed':c==='professional'?'Professional':c==='premade'?'Preset':'Custom'; }
+  function optionsFor(char){
+    var html='<option value="">— choose a voice —</option>';
+    if(char && char.voiceId){ html+='<optgroup label="This character\'s voice"><option value="'+esc(char.voiceId)+'">'+esc(char.voiceName||char.name||'Character voice')+'</option></optgroup>'; }
+    var saved=(window.TBStore.listVoices?window.TBStore.listVoices():[])||[];
+    if(saved.length){ html+='<optgroup label="Saved in Toolbench">'+saved.map(function(v){return '<option value="'+esc(v.voiceId||v.id)+'">'+esc(v.name||'Voice')+'</option>';}).join('')+'</optgroup>'; }
+    if(libVoices.length){
+      var byCat={}; libVoices.forEach(function(v){ (byCat[v.category]=byCat[v.category]||[]).push(v); });
+      ['cloned','generated','professional','premade','custom'].forEach(function(cat){
+        if(!byCat[cat])return;
+        html+='<optgroup label="ElevenLabs — '+catLabel(cat)+'">'+byCat[cat].map(function(v){return '<option value="'+esc(v.voiceId)+'">'+esc(v.name)+'</option>';}).join('')+'</optgroup>';
+      });
+    }
+    return html;
+  }
+  function buildVoicePickers(){
+    var a=document.getElementById('du-voiceA'), b=document.getElementById('du-voiceB');
+    var av=a.value, bv=b.value;
+    a.innerHTML=optionsFor(charA); b.innerHTML=optionsFor(charB);
+    if(charA&&charA.voiceId) a.value=charA.voiceId; else if(av) a.value=av;
+    if(charB&&charB.voiceId) b.value=charB.voiceId; else if(bv) b.value=bv;
+  }
+  fetch('/api/voices-list').then(function(x){return x.json();}).then(function(j){
+    libVoices=(j&&j.voices)||[]; buildVoicePickers();
+  }).catch(function(){ buildVoicePickers(); });
+  buildVoicePickers();
+
+  // preset dropdown fills the typeable background field
+  document.getElementById('du-scenePreset').onchange=function(){
+    if(this.value){ document.getElementById('du-scene').value=this.value; }
+  };
+
+  document.getElementById('du-make').onclick=function(){
+    if(!imgA||!imgB){window.toast('Pick a shot for both characters');return;}
+    var st=document.getElementById('du-status'), btn=this;
+    btn.disabled=true; st.textContent='Composing them together… 20–60s.';
+    fetch('/api/combine',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({ imageA:imgA, imageB:imgB, action:document.getElementById('du-action').value.trim(),
+        scene:document.getElementById('du-scene').value.trim(),
+        outfitA:document.getElementById('du-outfitA').value.trim(),
+        outfitB:document.getElementById('du-outfitB').value.trim(),
+        framing:document.getElementById('du-framing').value,
+        aspect:document.getElementById('du-aspect').value })})
+      .then(function(x){return x.json().then(function(j){return {ok:x.ok,j:j};});})
+      .then(function(res){ btn.disabled=false; st.textContent='';
+        if(!res.ok){st.textContent=res.j.error||'Failed'; window.toast(res.j.error||'Failed'); return;}
+        comboUrl=res.j.imageUrl; document.getElementById('du-result').src=comboUrl;
+        document.getElementById('du-download').href=comboUrl;
+        document.getElementById('du-resultPanel').style.display='';
+        document.getElementById('du-talkPanel').style.display=''; buildVoicePickers();
+        window.toast('Scene ready');
+      }).catch(function(err){btn.disabled=false; st.textContent=String(err); window.toast('Network error');});
+  };
+
+  function poll(model, requestId, st, done, endpoint){
+    var url=endpoint||'/api/generate-status';
+    var tries=0; var iv=setInterval(function(){ tries++;
+      fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:model,requestId:requestId})})
+        .then(function(x){return x.json();})
+        .then(function(j){ if(j.status==='done'){clearInterval(iv);done(null,j.videoUrl);}
+          else if(j.status==='failed'||j.error){clearInterval(iv);done(new Error(j.error||'Failed'));}
+          else { st.textContent='Rendering… ('+(tries*5)+'s)'; if(tries>=90){clearInterval(iv);done(new Error('Timed out'));} } })
+        .catch(function(){}); },5000);
+  }
+  document.getElementById('du-animate').onclick=function(){
+    if(!comboUrl){window.toast('Generate the image first');return;}
+    var st=document.getElementById('du-vstatus'), btn=this;
+    var framing=document.getElementById('du-framing').value;
+    var baseAction=document.getElementById('du-action').value.trim();
+    var motion = framing==='selfie'
+      ? ('Handheld selfie-camera vlog recorded on a phone: the person looks into the lens and talks to camera with natural mouth and head movement, the other person leans in and reacts, gentle handheld sway, lively social-media energy'
+         + (baseAction ? ', while '+baseAction : ''))
+      : baseAction;
+    btn.disabled=true; st.textContent='Starting…';
+    fetch('/api/animate',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({ characterImageUrl:comboUrl,
+        action:motion, scene:document.getElementById('du-scene').value.trim() })})
+      .then(function(x){return x.json().then(function(j){return {ok:x.ok,j:j};});})
+      .then(function(res){ if(!res.ok){btn.disabled=false; st.textContent=res.j.error||'Failed'; window.toast(res.j.error||'Failed'); return;}
+        st.textContent='Rendering… (1–3 min)';
+        poll(res.j.model,res.j.requestId,st,function(err,url){ btn.disabled=false;
+          if(err){st.textContent=String(err.message||err); window.toast(String(err.message||err)); return;}
+          st.textContent='Done'; var v=document.getElementById('du-video'); v.src=url; v.style.display='';
+          document.getElementById('du-vdownload').href=url; document.getElementById('du-vdl').style.display=''; window.toast('Clip ready');
+        }, '/api/animate-status');
+      }).catch(function(err){btn.disabled=false; st.textContent=String(err); window.toast('Network error');});
+  };
+
+  /* ---- per-character recording (speech-to-speech source) ---- */
+  var rec={A:{blob:null,mr:null,on:false},B:{blob:null,mr:null,on:false}};
+  function setupRec(role){
+    var btn=document.getElementById('du-rec'+role), au=document.getElementById('du-recAudio'+role);
+    btn.onclick=function(){
+      var r=rec[role];
+      if(r.on){ r.mr.stop(); return; }
+      navigator.mediaDevices.getUserMedia({audio:true}).then(function(stream){
+        var chunks=[]; var mr=new MediaRecorder(stream); r.mr=mr; r.on=true;
+        btn.textContent='■ Stop '+role; btn.classList.add('btn-primary');
+        mr.ondataavailable=function(e){ if(e.data.size)chunks.push(e.data); };
+        mr.onstop=function(){ stream.getTracks().forEach(function(t){t.stop();});
+          var blob=new Blob(chunks,{type:mr.mimeType||'audio/webm'}); r.blob=blob; r.on=false;
+          au.src=URL.createObjectURL(blob); au.style.display=''; btn.textContent='● Re-record '+role; btn.classList.remove('btn-primary');
+        };
+        mr.start();
+      }).catch(function(){ window.toast('Microphone blocked — type the line instead'); });
+    };
+  }
+  setupRec('A'); setupRec('B');
+
+  function blobToDataUrl(blob){ return new Promise(function(res){ var fr=new FileReader(); fr.onload=function(){res(fr.result);}; fr.readAsDataURL(blob); }); }
+
+  function makeTalk(role){
+    var img = document.getElementById('du-src'+role).value==='scene' ? comboUrl : (role==='A'?imgA:imgB);
+    if(!img){ window.toast('Pick a shot / generate the scene first'); return; }
+    var voiceId=document.getElementById('du-voice'+role).value;
+    var script=document.getElementById('du-script'+role).value.trim();
+    var blob=rec[role].blob;
+    if(!voiceId){ window.toast('Choose a voice for '+role); return; }
+    if(!blob && !script){ window.toast('Record a line or type one for '+role); return; }
+    var st=document.getElementById('du-status'+role), btn=document.getElementById('du-talk'+role);
+    btn.disabled=true; st.textContent='Preparing voice…';
+    (blob?blobToDataUrl(blob):Promise.resolve(null)).then(function(audioDataUrl){
+      var body={ mode:'talking', characterImageUrl:img, voiceId:voiceId };
+      if(audioDataUrl) body.sourceAudioDataUrl=audioDataUrl; else body.script=script;
+      return fetch('/api/generate-start',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+    }).then(function(x){return x.json().then(function(j){return {ok:x.ok,j:j};});})
+      .then(function(res){ if(!res.ok){btn.disabled=false; st.textContent=res.j.error||'Failed'; window.toast(res.j.error||'Failed'); return;}
+        st.textContent='Lip-syncing… (1–3 min)';
+        poll(res.j.model,res.j.requestId,st,function(err,url){ btn.disabled=false;
+          if(err){st.textContent=String(err.message||err); window.toast(String(err.message||err)); return;}
+          st.textContent='Done'; var v=document.getElementById('du-video'+role); v.src=url; v.style.display='';
+          document.getElementById('du-vdl'+role).href=url; document.getElementById('du-dl'+role).style.display=''; window.toast(role+' clip ready');
+        });
+      }).catch(function(err){btn.disabled=false; st.textContent=String(err); window.toast('Network error');});
+  }
+  document.getElementById('du-talkA').onclick=function(){ makeTalk('A'); };
+  document.getElementById('du-talkB').onclick=function(){ makeTalk('B'); };
+})();
+</script>
+</body>
+</html>

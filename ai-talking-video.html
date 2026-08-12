@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AI Character Video — Toolbench</title>
+<meta name="description" content="Turn a saved AI character into a realistic video — talking to camera with a voice you record or clone, or a short action clip. Free.">
+<link rel="canonical" href="https://mytoolbench.co/ai-talking-video">
+<meta name="robots" content="index,follow">
+<meta property="og:type" content="website">
+<meta property="og:title" content="AI Character Video — Toolbench">
+<meta property="og:description" content="Make your saved character talk or act in a realistic video. Free.">
+<meta property="og:url" content="https://mytoolbench.co/ai-talking-video">
+<meta property="og:site_name" content="Toolbench">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect x='4' y='4' width='24' height='24' rx='6' fill='none' stroke='%2316171B' stroke-width='3'/><rect x='11' y='11' width='10' height='10' rx='2' fill='%232B41D8'/></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"AI Character Video","url":"https://mytoolbench.co/ai-talking-video.html","applicationCategory":"MultimediaApplication","operatingSystem":"Any (web browser)","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}</script>
+</head>
+<body>
+<div id="site-header"></div>
+
+<main class="wrap page">
+  <p class="crumb"><a href="index.html">Toolbench</a> &nbsp;/&nbsp; AI Studio &nbsp;/&nbsp; AI Character Video</p>
+  <div class="tool-head rise"><span class="chip">AI Studio · Free</span></div>
+  <h1 class="title rise d1">AI Character Video</h1>
+  <p class="subtitle rise d2">Bring a saved character to life: talking to camera in a voice you record or clone (lip-synced), or a short action clip. Longer videos keep working in the background — just wait for it.</p>
+
+  <div class="rise d3">
+  <div class="panel">
+    <p class="panel-label">1 · Character</p>
+    <div class="row">
+      <div><label class="field">Use a saved character</label>
+        <select id="tv-charSel"><option value="">— none —</option></select></div>
+      <div><label class="field">…or upload an image</label>
+        <input type="file" id="tv-imgfile" accept="image/*" style="padding:10px"></div>
+    </div>
+    <div id="tv-shots" class="checks" style="margin-top:12px"></div>
+    <div id="tv-imgprev" style="margin-top:12px;display:none"><img id="tv-img" alt="Character" style="max-height:150px;border:1px solid var(--line);border-radius:8px;background:#fff"></div>
+  </div>
+
+  <div class="panel">
+    <p class="panel-label">2 · Voice</p>
+    <label class="field">Ready-made voices</label>
+    <div class="row">
+      <div><select id="tv-preset">
+        <option value="">— choose a preset voice —</option>
+        <option value="ar_grandmother">Arabic Grandmother — warm</option>
+        <option value="ar_grandfather">Arabic Grandfather — wise</option>
+        <option value="ar_boy">Arabic Boy — playful</option>
+        <option value="ar_girl">Arabic Girl — sweet</option>
+        <option value="ar_young_woman">Arabic Young Woman — friendly</option>
+        <option value="ar_young_man">Arabic Young Man — confident</option>
+        <option value="ar_announcer">Arabic Announcer — bold</option>
+        <option value="ar_narrator_f">Arabic Narrator — storyteller</option>
+      </select></div>
+      <div><button class="btn btn-ghost btn-sm" id="tv-preset-go">Create &amp; use</button>
+        <span class="hint" id="tv-presetstatus" style="margin:0;align-self:center"></span></div>
+    </div>
+    <audio id="tv-presetprev" controls style="width:100%;margin:8px 0 4px;display:none"></audio>
+    <div style="height:1px;background:var(--line);margin:14px 0"></div>
+    <div class="row">
+      <div><label class="field">Use a saved voice</label>
+        <select id="tv-voiceSel"><option value="">Default voice</option></select></div>
+      <div><label class="field">…or clone a new voice (upload a clip)</label>
+        <input type="file" id="tv-voicefile" accept="audio/*" style="padding:10px"></div>
+    </div>
+    <div class="controls">
+      <button class="btn btn-ghost btn-sm" id="tv-clone">Clone &amp; save voice</button>
+      <span class="hint" id="tv-voicestatus" style="margin:0;align-self:center"></span>
+    </div>
+  </div>
+
+  <div class="panel">
+    <p class="panel-label">3 · What to make</p>
+    <div class="checks" style="margin-bottom:14px">
+      <label class="check on" id="tv-tab-talk"><input type="radio" name="tvmode" value="talking" checked> Talking to camera</label>
+      <label class="check" id="tv-tab-act"><input type="radio" name="tvmode" value="action"> Action clip</label>
+    </div>
+
+    <div id="tv-talkPane">
+      <div class="checks" style="margin-bottom:12px">
+        <label class="check on" id="tv-sub-rec"><input type="radio" name="tvsub" value="record" checked> Record my voice</label>
+        <label class="check" id="tv-sub-type"><input type="radio" name="tvsub" value="type"> Type text</label>
+      </div>
+      <div id="tv-recPane">
+        <p class="hint" style="margin-top:0">Perform the line yourself — your delivery is kept and converted into the chosen voice, then lip-synced.</p>
+        <div class="controls">
+          <button class="btn btn-primary btn-sm" id="tv-rec">● Record</button>
+          <button class="btn btn-ghost btn-sm" id="tv-stop" disabled>■ Stop</button>
+          <span class="hint" id="tv-rectime" style="margin:0;align-self:center"></span>
+        </div>
+        <p class="hint">…or upload a recording: <input type="file" id="tv-recfile" accept="audio/*" style="padding:6px"></p>
+        <audio id="tv-recprev" controls style="width:100%;margin-top:8px;display:none"></audio>
+      </div>
+      <div id="tv-typePane" style="display:none">
+        <textarea id="tv-script" placeholder="اكتب ما تريد أن تقوله الشخصية…  (What the character says.)"></textarea>
+        <div class="row" style="margin-top:12px"><div><label class="field">Language</label>
+          <select id="tv-lang"><option value="ar">Arabic</option><option value="en">English</option><option value="fr">French</option><option value="">Auto</option></select></div></div>
+      </div>
+    </div>
+
+    <div id="tv-actPane" style="display:none">
+      <div class="row">
+        <div><label class="field">Action</label><input type="text" id="tv-action" placeholder="e.g. frying samosas, pouring Arabic tea, smiling and waving"></div>
+        <div><label class="field">Background</label>
+          <select id="tv-scenePreset">
+            <option value="">— keep current —</option>
+            <option value="a traditional antique Arabic kitchen, warm light, copper pots and brass trays">Antique Arabic kitchen</option>
+            <option value="an Andalusian-style house with arches and zellige tiles, warm daylight">Andalusian house</option>
+            <option value="a traditional Gulf majlis with patterned cushions and brass coffee pots">Traditional majlis</option>
+          </select></div>
+      </div>
+    </div>
+
+    <div class="row" style="margin-top:12px"><div><label class="field">Quality</label>
+      <select id="tv-res"><option value="480p">Standard (480p)</option><option value="720p">High (720p)</option></select></div></div>
+    <div class="controls">
+      <button class="btn btn-primary" id="tv-go">Generate video</button>
+      <span class="hint" id="tv-status" style="margin:0;align-self:center"></span>
+    </div>
+  </div>
+
+  <div class="panel" id="tv-resultPanel" style="display:none">
+    <p class="panel-label">Your video</p>
+    <video id="tv-result" controls playsinline style="width:100%;max-width:520px;border:1px solid var(--line);border-radius:10px;background:#000"></video>
+    <div class="controls"><a class="btn btn-ghost btn-sm" id="tv-download" download="character-video.mp4">Download video</a></div>
+  </div>
+  </div>
+
+  <div class="ad-slot"><div class="ph">AD SLOT &mdash; add your AdSense code here</div></div>
+  <section class="prose" style="margin-top:40px">
+    <h2>About the character video tool</h2>
+    <p>Pick a character you built and saved in the <a href="ai-character.html">Character Studio</a>, choose a voice (record and convert your own, clone one, or use the default), and make a realistic clip — either the character speaking to camera with lips matched to the audio, or a short action shot. Videos take a minute or two; the tool keeps working and shows the result when it's ready.</p>
+    <p>Free to use. Media is sent to the AI services only to produce your video and isn't stored by Toolbench. Note that AI video can drift on identity or hands in longer or action clips — talking-to-camera is the most reliable.</p>
+  </section>
+</main>
+<div id="site-footer"></div>
+<script src="app.js"></script>
+<script src="tb-store.js"></script>
+<script src="tb-voices.js"></script>
+<script>
+(function(){
+  var charUrl=null, voiceId=null, recordedData=null, mode='talking', sub='record';
+
+  // ---- character picker ----
+  function fillChars(){
+    var sel=document.getElementById('tv-charSel'); var list=window.TBStore.listCharacters();
+    sel.innerHTML='<option value="">— none —</option>'+list.map(function(c){return '<option value="'+c.id+'">'+(c.name||'Character')+'</option>';}).join('');
+  }
+  fillChars();
+  document.getElementById('tv-charSel').onchange=function(){
+    var c=window.TBStore.getCharacter(this.value); var box=document.getElementById('tv-shots'); box.innerHTML='';
+    if(c&&c.voiceId){ voiceId=c.voiceId; var vs=document.getElementById('tv-voiceSel'); if(vs) vs.value=c.voiceId; window.toast('Using '+(c.name||'character')+'’s saved voice'); }
+    if(!c||!c.shots){ return; }
+    c.shots.forEach(function(s,i){
+      var b=document.createElement('button'); b.className='check'; b.style.padding='4px';
+      b.innerHTML='<img src="'+s.url+'" style="width:70px;height:70px;object-fit:cover;border-radius:6px">';
+      b.onclick=function(){ charUrl=s.url; document.getElementById('tv-img').src=s.url; document.getElementById('tv-imgprev').style.display='';
+        box.querySelectorAll('button').forEach(function(x){x.classList.remove('on');}); b.classList.add('on'); };
+      box.appendChild(b);
+      if(i===0){ b.click(); }
+    });
+  };
+  document.getElementById('tv-imgfile').onchange=function(e){
+    var f=e.target.files[0]; if(!f)return; if(f.size>6*1024*1024){window.toast('Image under 6 MB please');return;}
+    var r=new FileReader(); r.onload=function(){ charUrl=r.result; document.getElementById('tv-img').src=charUrl; document.getElementById('tv-imgprev').style.display=''; }; r.readAsDataURL(f);
+  };
+  // handoff from the character studio ("Use in video")
+  try{ var pending=localStorage.getItem('tb_video_character'); if(pending){ charUrl=pending; document.getElementById('tv-img').src=pending; document.getElementById('tv-imgprev').style.display=''; localStorage.removeItem('tb_video_character'); } }catch(e){}
+
+  // ---- voice ---- (character voice + Toolbench-saved + ElevenLabs library)
+  function fillVoices(){
+    window.TBVoices.fill(document.getElementById('tv-voiceSel'), { firstLabel:'Default voice' });
+  }
+  fillVoices();
+  document.getElementById('tv-voiceSel').onchange=function(){ voiceId=this.value||null; };
+  document.getElementById('tv-clone').onclick=function(){
+    var f=document.getElementById('tv-voicefile').files[0]; if(!f){window.toast('Choose a voice clip first');return;}
+    if(f.size>8*1024*1024){window.toast('Audio under 8 MB please');return;}
+    var st=document.getElementById('tv-voicestatus'), btn=this, r=new FileReader();
+    r.onload=function(){ btn.disabled=true; st.textContent='Cloning…';
+      fetch('/api/voice-clone',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({audioDataUrl:r.result,name:f.name})})
+        .then(function(x){return x.json().then(function(j){return {ok:x.ok,j:j};});})
+        .then(function(res){ btn.disabled=false;
+          if(!res.ok){st.textContent=res.j.error||'Failed'; window.toast('Clone failed'); return;}
+          voiceId=res.j.voiceId; var nm=prompt('Name this voice','My voice')||'My voice';
+          window.TBStore.saveVoice({name:nm,voiceId:res.j.voiceId,language:'ar'}); fillVoices();
+          document.getElementById('tv-voiceSel').value=res.j.voiceId;
+          st.textContent='✓ Cloned & saved'; window.toast('Voice saved'); });
+    }; r.readAsDataURL(f);
+  };
+
+  // ---- preset voices (Voice Design) ----
+  document.getElementById('tv-preset-go').onclick=function(){
+    var preset=document.getElementById('tv-preset').value; if(!preset){window.toast('Choose a preset voice');return;}
+    var label=document.getElementById('tv-preset').selectedOptions[0].textContent;
+    var st=document.getElementById('tv-presetstatus'), btn=this;
+    btn.disabled=true; st.textContent='Creating voice… 10–30s.';
+    fetch('/api/voice-design',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({preset:preset})})
+      .then(function(x){return x.json().then(function(j){return {ok:x.ok,j:j};});})
+      .then(function(res){ btn.disabled=false;
+        if(!res.ok){st.textContent=res.j.error||'Failed'; window.toast(res.j.error||'Voice failed'); return;}
+        voiceId=res.j.voiceId;
+        window.TBStore.saveVoice({name:res.j.name||label,voiceId:res.j.voiceId,language:res.j.language||'ar'}); fillVoices();
+        document.getElementById('tv-voiceSel').value=res.j.voiceId;
+        if(res.j.previewDataUrl){ var a=document.getElementById('tv-presetprev'); a.src=res.j.previewDataUrl; a.style.display=''; }
+        st.textContent='✓ Ready & saved'; window.toast('Voice ready');
+      }).catch(function(err){btn.disabled=false; st.textContent=String(err); window.toast('Network error');});
+  };
+
+  // ---- mode + sub tabs ----
+  function setMode(m){ mode=m;
+    document.getElementById('tv-talkPane').style.display=m==='talking'?'':'none';
+    document.getElementById('tv-actPane').style.display=m==='action'?'':'none';
+    document.getElementById('tv-tab-talk').classList.toggle('on',m==='talking');
+    document.getElementById('tv-tab-act').classList.toggle('on',m==='action'); }
+  document.getElementById('tv-tab-talk').onclick=function(){setMode('talking');};
+  document.getElementById('tv-tab-act').onclick=function(){setMode('action');};
+  function setSub(s){ sub=s;
+    document.getElementById('tv-recPane').style.display=s==='record'?'':'none';
+    document.getElementById('tv-typePane').style.display=s==='type'?'':'none';
+    document.getElementById('tv-sub-rec').classList.toggle('on',s==='record');
+    document.getElementById('tv-sub-type').classList.toggle('on',s==='type'); }
+  document.getElementById('tv-sub-rec').onclick=function(){setSub('record');};
+  document.getElementById('tv-sub-type').onclick=function(){setSub('type');};
+  var _sp=document.getElementById('tv-scenePreset');
+
+  // ---- recording ----
+  var mediaRec=null, chunks=[], timer=null, secs=0;
+  var recBtn=document.getElementById('tv-rec'), stopBtn=document.getElementById('tv-stop'), recTime=document.getElementById('tv-rectime'), recPrev=document.getElementById('tv-recprev');
+  recBtn.onclick=function(){
+    if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){window.toast('Recording not supported here');return;}
+    navigator.mediaDevices.getUserMedia({audio:true}).then(function(stream){
+      chunks=[]; mediaRec=new MediaRecorder(stream);
+      mediaRec.ondataavailable=function(e){ if(e.data.size) chunks.push(e.data); };
+      mediaRec.onstop=function(){ var blob=new Blob(chunks,{type:mediaRec.mimeType||'audio/webm'});
+        var r=new FileReader(); r.onload=function(){ recordedData=r.result; recPrev.src=recordedData; recPrev.style.display=''; }; r.readAsDataURL(blob);
+        stream.getTracks().forEach(function(t){t.stop();}); };
+      mediaRec.start(); secs=0; recTime.textContent='0:00 recording…';
+      timer=setInterval(function(){secs++; recTime.textContent=Math.floor(secs/60)+':'+('0'+(secs%60)).slice(-2)+' recording…';},1000);
+      recBtn.disabled=true; stopBtn.disabled=false;
+    }).catch(function(){window.toast('Microphone permission denied');});
+  };
+  stopBtn.onclick=function(){ if(mediaRec&&mediaRec.state!=='inactive') mediaRec.stop(); clearInterval(timer); recTime.textContent='Recorded ✓'; recBtn.disabled=false; stopBtn.disabled=true; };
+  document.getElementById('tv-recfile').onchange=function(e){ var f=e.target.files[0]; if(!f)return; if(f.size>10*1024*1024){window.toast('Audio under 10 MB');return;}
+    var r=new FileReader(); r.onload=function(){ recordedData=r.result; recPrev.src=recordedData; recPrev.style.display=''; recTime.textContent='Uploaded ✓'; }; r.readAsDataURL(f); };
+
+  // ---- generate (submit + poll) ----
+  function poll(model, requestId, st, done){
+    var tries=0, max=90; // ~7.5 min at 5s
+    var iv=setInterval(function(){
+      tries++;
+      fetch('/api/generate-status',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:model,requestId:requestId})})
+        .then(function(x){return x.json();})
+        .then(function(j){
+          if(j.status==='done'){ clearInterval(iv); done(null,j.videoUrl); }
+          else if(j.status==='failed'||j.error){ clearInterval(iv); done(new Error(j.error||'Generation failed')); }
+          else { st.textContent='Rendering… ('+(tries*5)+'s)'; if(tries>=max){ clearInterval(iv); done(new Error('Timed out')); } }
+        }).catch(function(){ /* keep polling */ });
+    },5000);
+  }
+  document.getElementById('tv-go').onclick=function(){
+    if(!charUrl){window.toast('Pick or upload a character image first');return;}
+    var body={ characterImageUrl:charUrl, mode:mode, voiceId:voiceId, resolution:document.getElementById('tv-res').value };
+    if(mode==='talking'){
+      if(sub==='record'){ if(!recordedData){window.toast('Record or upload your voice');return;} body.sourceAudioDataUrl=recordedData; }
+      else { var sc=document.getElementById('tv-script').value.trim(); if(!sc){window.toast('Type a script');return;} body.script=sc; body.language=document.getElementById('tv-lang').value; }
+    } else {
+      body.action=document.getElementById('tv-action').value.trim();
+      body.scene=_sp.value||'';
+      if(!body.action){window.toast('Describe the action');return;}
+    }
+    var st=document.getElementById('tv-status'), btn=this;
+    btn.disabled=true; st.textContent='Starting…';
+    fetch('/api/generate-start',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)})
+      .then(function(x){return x.json().then(function(j){return {ok:x.ok,j:j};});})
+      .then(function(res){
+        if(!res.ok){ btn.disabled=false; st.textContent=res.j.error||'Failed'; window.toast(res.j.error||'Failed'); return; }
+        st.textContent='Rendering… (this can take 1–3 minutes)';
+        poll(res.j.model, res.j.requestId, st, function(err, url){
+          btn.disabled=false;
+          if(err){ st.textContent=String(err.message||err); window.toast(String(err.message||err)); return; }
+          st.textContent='Done'; var v=document.getElementById('tv-result'); v.src=url;
+          document.getElementById('tv-download').href=url; document.getElementById('tv-resultPanel').style.display=''; window.toast('Video ready');
+        });
+      })
+      .catch(function(err){ btn.disabled=false; st.textContent=String(err); window.toast('Network error'); });
+  };
+})();
+</script>
+</body>
+</html>

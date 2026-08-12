@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AI Character Studio — Toolbench</title>
+<meta name="description" content="Upload a photo and build a consistent AI character: many shots, all sides, outfit and scene changes. Save it and reuse it. Free.">
+<link rel="canonical" href="https://mytoolbench.co/ai-character">
+<meta name="robots" content="index,follow">
+<meta property="og:type" content="website">
+<meta property="og:title" content="AI Character Studio — Toolbench">
+<meta property="og:description" content="Build, restyle and save a consistent AI character. Free.">
+<meta property="og:url" content="https://mytoolbench.co/ai-character">
+<meta property="og:site_name" content="Toolbench">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect x='4' y='4' width='24' height='24' rx='6' fill='none' stroke='%2316171B' stroke-width='3'/><rect x='11' y='11' width='10' height='10' rx='2' fill='%232B41D8'/></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"AI Character Studio","url":"https://mytoolbench.co/ai-character.html","applicationCategory":"MultimediaApplication","operatingSystem":"Any (web browser)","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}</script>
+</head>
+<body>
+<div id="site-header"></div>
+
+<main class="wrap page">
+  <p class="crumb"><a href="index.html">Toolbench</a> &nbsp;/&nbsp; AI Studio &nbsp;/&nbsp; AI Character Studio</p>
+  <div class="tool-head rise"><span class="chip">AI Studio · Free</span></div>
+  <h1 class="title rise d1">AI Character Studio</h1>
+  <p class="subtitle rise d2">Upload one photo and build a consistent character — many shots, all sides, different outfits and scenes. Save it and reuse it later to make videos.</p>
+
+  <div class="rise d3">
+  <div class="panel">
+    <p class="panel-label">1 · Upload a photo</p>
+    <input type="file" id="ac-file" accept="image/*" style="padding:10px">
+    <p class="hint">A clear, well-lit face works best. Your photo is sent to the AI image service to build the character and isn’t stored by Toolbench.</p>
+    <div id="ac-prev" style="margin-top:14px;display:none"><img id="ac-img" alt="Your photo" style="max-height:150px;border:1px solid var(--line);border-radius:8px;background:#fff"></div>
+  </div>
+
+  <div class="panel">
+    <p class="panel-label">2 · Describe &amp; style</p>
+    <div class="row">
+      <div><label class="field">Character name</label><input type="text" id="ac-name" placeholder="e.g. Um Khaled"></div>
+      <div><label class="field">Outfit (optional)</label><input type="text" id="ac-outfit" placeholder="e.g. traditional black abaya with gold trim"></div>
+    </div>
+    <div class="row" style="margin-top:12px">
+      <div><label class="field">Scene / background</label>
+        <select id="ac-scenePreset">
+          <option value="">— Choose a background —</option>
+          <option value="inside a traditional antique Arabic kitchen — aged copper pots and brass trays on carved wooden shelves, ceramic spice jars, a stone wall, a plate of golden fried samosas, warm golden light from a small arched window">Antique Arabic kitchen</option>
+          <option value="inside an elegant Andalusian-style house — horseshoe arches, intricate zellige mosaic tiles, carved dark wood, a central marble fountain, brass hanging lanterns, soft warm daylight">Andalusian antique house</option>
+          <option value="in a traditional Gulf majlis — richly patterned floor cushions and carpets, ornate brass dallah coffee pots, arched alcoves, warm lamp light, intricate detail">Traditional majlis</option>
+          <option value="in a rustic old-world stone kitchen — hanging dried herbs and garlic, worn wooden table, copper cookware, warm light from a small window, cozy and detailed">Rustic old-world kitchen</option>
+          <option value="in a sunlit antique Arabian courtyard — terracotta and patterned tile, climbing jasmine, an ornate carved wooden door, dappled warm light">Antique courtyard</option>
+          <option value="in a warm elegant modern kitchen — marble counters, wooden accents, soft ambient light, tasteful and clean">Elegant modern kitchen</option>
+          <option value="clean photography studio with soft key light and a seamless background">Clean studio</option>
+        </select>
+        <input type="text" id="ac-scene" placeholder="…or describe your own background" style="margin-top:8px"></div>
+      <div><label class="field">Doing what? (optional)</label><input type="text" id="ac-action" placeholder="e.g. frying samosas, pouring Arabic tea"></div>
+    </div>
+    <div class="controls">
+      <button class="btn btn-primary" id="ac-set">Generate full set (all sides)</button>
+      <button class="btn btn-ghost" id="ac-one">Add one shot</button>
+      <span class="hint" id="ac-status" style="margin:0;align-self:center"></span>
+    </div>
+    <p class="hint">“Full set” makes a front portrait, three-quarter, full body, side and back view — plus an action shot if you filled “doing what”. Change the outfit and run it again to restyle.</p>
+  </div>
+
+  <div class="panel">
+    <p class="panel-label">3 · Voice <span style="color:var(--faint)">(optional — saved with the character)</span></p>
+    <div class="row">
+      <div><label class="field">Preset voice</label>
+        <select id="ac-preset">
+          <option value="">— choose a voice —</option>
+          <option value="ar_grandmother">Arabic Grandmother — warm</option>
+          <option value="ar_grandfather">Arabic Grandfather — wise</option>
+          <option value="ar_boy">Arabic Boy — playful</option>
+          <option value="ar_girl">Arabic Girl — sweet</option>
+          <option value="ar_young_woman">Arabic Young Woman — friendly</option>
+          <option value="ar_young_man">Arabic Young Man — confident</option>
+          <option value="ar_announcer">Arabic Announcer — bold</option>
+          <option value="ar_narrator_f">Arabic Narrator — storyteller</option>
+        </select></div>
+      <div><button class="btn btn-ghost btn-sm" id="ac-voice-go" style="margin-top:26px">Create &amp; assign</button>
+        <span class="hint" id="ac-voicestatus" style="margin:0"></span></div>
+      <div><label class="field">…or a saved voice</label>
+        <select id="ac-voiceSel"><option value="">— none —</option></select></div>
+    </div>
+    <audio id="ac-voiceprev" controls style="width:100%;margin-top:8px;display:none"></audio>
+    <p class="hint">This voice is stored with the character, so the video tool uses it automatically.</p>
+  </div>
+
+  <div class="panel" id="ac-resultPanel" style="display:none">
+    <p class="panel-label">Character shots</p>
+    <div id="ac-gallery" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px"></div>
+    <div class="controls" style="margin-top:14px">
+      <button class="btn btn-primary btn-sm" id="ac-save">Save character</button>
+      <span class="hint" id="ac-savestatus" style="margin:0;align-self:center"></span>
+    </div>
+  </div>
+
+  <div class="panel" id="ac-savedPanel" style="display:none">
+    <p class="panel-label">My saved characters <span style="color:var(--faint)">(on this device)</span></p>
+    <div id="ac-saved" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px"></div>
+  </div>
+  </div>
+
+  <div class="ad-slot"><div class="ph">AD SLOT &mdash; add your AdSense code here</div></div>
+  <section class="prose" style="margin-top:40px">
+    <h2>About the AI character studio</h2>
+    <p>Upload a single photo and build a reusable character: a full set of shots from every side, in the outfit and scene you describe, with the same face kept consistent. Save the character on your device, then reuse it — including in the <a href="ai-talking-video.html">talking video tool</a> to make it speak and move. Change the outfit or scene and generate again to create new looks.</p>
+    <p>Free to use. Generation happens on a secure AI service; your uploaded photo is used only to build your character and isn’t kept by Toolbench.</p>
+  </section>
+</main>
+<div id="site-footer"></div>
+<script src="app.js"></script>
+<script src="tb-store.js"></script>
+<script src="tb-voices.js"></script>
+<script>
+(function(){
+  var baseData=null, thumb=null, shots=[];
+
+  function makeThumb(dataUrl, cb){
+    var im=new Image();
+    im.onload=function(){
+      var s=256, c=document.createElement('canvas');
+      var r=Math.min(s/im.width, s/im.height, 1);
+      c.width=Math.round(im.width*r); c.height=Math.round(im.height*r);
+      c.getContext('2d').drawImage(im,0,0,c.width,c.height);
+      try{ cb(c.toDataURL('image/jpeg',0.8)); }catch(e){ cb(null); }
+    };
+    im.src=dataUrl;
+  }
+
+  document.getElementById('ac-file').onchange=function(e){
+    var f=e.target.files[0]; if(!f)return;
+    if(f.size>6*1024*1024){window.toast('Please choose a photo under 6 MB');return;}
+    var r=new FileReader();
+    r.onload=function(){ baseData=r.result;
+      document.getElementById('ac-img').src=baseData; document.getElementById('ac-prev').style.display='';
+      makeThumb(baseData, function(t){ thumb=t; });
+    };
+    r.readAsDataURL(f);
+  };
+
+  var _sp=document.getElementById('ac-scenePreset');
+  if(_sp) _sp.onchange=function(){ if(_sp.value) document.getElementById('ac-scene').value=_sp.value; };
+
+  // ---- character voice ----
+  var voiceId=null, voiceName=null;
+  function fillVoices(){ window.TBVoices.fill(document.getElementById('ac-voiceSel'), { firstLabel:'— none —' }); }
+  fillVoices();
+  document.getElementById('ac-voiceSel').onchange=function(){ voiceId=this.value||null; voiceName=this.selectedOptions[0]?this.selectedOptions[0].textContent:null; };
+  document.getElementById('ac-voice-go').onclick=function(){
+    var preset=document.getElementById('ac-preset').value; if(!preset){window.toast('Choose a preset voice');return;}
+    var label=document.getElementById('ac-preset').selectedOptions[0].textContent;
+    var st=document.getElementById('ac-voicestatus'), btn=this; btn.disabled=true; st.textContent='Creating… 10–30s.';
+    fetch('/api/voice-design',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({preset:preset})})
+      .then(function(x){return x.json().then(function(j){return {ok:x.ok,j:j};});})
+      .then(function(res){ btn.disabled=false;
+        if(!res.ok){st.textContent=res.j.error||'Failed'; window.toast(res.j.error||'Voice failed'); return;}
+        voiceId=res.j.voiceId; voiceName=res.j.name||label;
+        window.TBStore.saveVoice({name:voiceName,voiceId:voiceId,language:res.j.language||'ar'}); fillVoices();
+        document.getElementById('ac-voiceSel').value=voiceId;
+        if(res.j.previewDataUrl){var a=document.getElementById('ac-voiceprev');a.src=res.j.previewDataUrl;a.style.display='';}
+        st.textContent='✓ Assigned'; window.toast('Voice assigned'); })
+      .catch(function(err){btn.disabled=false; st.textContent=String(err);});
+  };
+
+  function fields(){
+    return { outfit:document.getElementById('ac-outfit').value.trim(),
+      scene:document.getElementById('ac-scene').value.trim(),
+      action:document.getElementById('ac-action').value.trim() };
+  }
+  function addCard(url,label){
+    var g=document.getElementById('ac-gallery');
+    var card=document.createElement('div');
+    card.innerHTML='<img src="'+url+'" alt="'+label+'" style="width:100%;border:1px solid var(--line);border-radius:10px;background:#fff">'+
+      '<div class="hint" style="margin:6px 0 4px">'+label+'</div>'+
+      '<a class="btn btn-ghost btn-sm" href="'+url+'" download="character.png">Download</a> '+
+      '<a class="btn btn-ghost btn-sm" href="ai-talking-video.html" onclick="localStorage.setItem(\'tb_video_character\',\''+url+'\')">Use in video &rarr;</a>';
+    g.appendChild(card);
+    document.getElementById('ac-resultPanel').style.display='';
+  }
+
+  async function gen(brief){
+    var f=fields();
+    var res=await fetch('/api/character',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({ imageDataUrl:baseData, view:brief.view, aspect:brief.aspect,
+        outfit:f.outfit, scene:f.scene, action:brief.action||'' })});
+    var j=await res.json();
+    if(!res.ok) throw new Error(j.error||'Generation failed');
+    addCard(j.imageUrl, brief.label);
+    shots.push({url:j.imageUrl,label:brief.label});
+  }
+
+  var SET=[
+    {view:'head-and-shoulders portrait, facing the camera', label:'Front portrait', aspect:'1:1'},
+    {view:'three-quarter view, turned slightly to one side', label:'Three-quarter', aspect:'4:5'},
+    {view:'full-length front view, standing, head to toe', label:'Full body', aspect:'9:16'},
+    {view:'left side profile view', label:'Side profile', aspect:'4:5'},
+    {view:'back view, facing away from the camera', label:'Back view', aspect:'4:5'}
+  ];
+
+  document.getElementById('ac-set').onclick=async function(){
+    if(!baseData){window.toast('Upload a photo first');return;}
+    var st=document.getElementById('ac-status'), btn=this;
+    btn.disabled=true;
+    var briefs=SET.slice();
+    var act=document.getElementById('ac-action').value.trim();
+    if(act) briefs.push({view:'medium shot, front, natural pose', label:'Action', aspect:'4:5', action:act});
+    for(var i=0;i<briefs.length;i++){
+      st.textContent='Generating '+(i+1)+' of '+briefs.length+' ('+briefs[i].label+')…';
+      try{ await gen(briefs[i]); }catch(e){ window.toast(String(e.message||e)); st.textContent=String(e.message||e); }
+    }
+    btn.disabled=false; st.textContent='Set ready'; window.toast('Character set ready');
+  };
+
+  document.getElementById('ac-one').onclick=async function(){
+    if(!baseData){window.toast('Upload a photo first');return;}
+    var st=document.getElementById('ac-status'), btn=this;
+    var act=document.getElementById('ac-action').value.trim();
+    btn.disabled=true; st.textContent='Generating…';
+    try{ await gen({view:'medium shot, front', label:(act||'Variation'), aspect:'4:5', action:act}); st.textContent=''; }
+    catch(e){ st.textContent=String(e.message||e); window.toast(String(e.message||e)); }
+    btn.disabled=false;
+  };
+
+  document.getElementById('ac-save').onclick=function(){
+    if(!shots.length){window.toast('Generate some shots first');return;}
+    var name=document.getElementById('ac-name').value.trim()||'Untitled character';
+    window.TBStore.saveCharacter({ name:name, thumb:thumb||shots[0].url, shots:shots.slice(),
+      outfit:document.getElementById('ac-outfit').value.trim(),
+      scene:document.getElementById('ac-scene').value.trim(), voiceId:voiceId, voiceName:voiceName });
+    document.getElementById('ac-savestatus').textContent='✓ Saved';
+    window.toast('Character saved on this device'); renderSaved();
+  };
+
+  function renderSaved(){
+    var list=window.TBStore.listCharacters();
+    var box=document.getElementById('ac-saved');
+    if(!list.length){ document.getElementById('ac-savedPanel').style.display='none'; return; }
+    document.getElementById('ac-savedPanel').style.display='';
+    box.innerHTML='';
+    list.forEach(function(c){
+      var card=document.createElement('div');
+      card.style.cssText='border:1px solid var(--line);border-radius:10px;padding:10px;background:var(--panel)';
+      card.innerHTML='<img src="'+(c.thumb||(c.shots[0]&&c.shots[0].url)||'')+'" style="width:100%;border-radius:8px;background:#fff">'+
+        '<div style="font-weight:600;margin:8px 0 2px">'+(c.name||'Character')+'</div>'+
+        '<div class="hint" style="margin:0 0 8px">'+(c.shots?c.shots.length:0)+' shots</div>'+
+        '<button class="btn btn-ghost btn-sm" data-load="'+c.id+'">Open</button> '+
+        '<button class="btn btn-ghost btn-sm" data-del="'+c.id+'">Delete</button>';
+      box.appendChild(card);
+    });
+    box.querySelectorAll('[data-load]').forEach(function(btn){
+      btn.onclick=function(){
+        var c=window.TBStore.getCharacter(btn.getAttribute('data-load')); if(!c)return;
+        shots=c.shots.slice(); document.getElementById('ac-gallery').innerHTML='';
+        c.shots.forEach(function(s){ addCard(s.url, s.label||'shot'); });
+        document.getElementById('ac-name').value=c.name||'';
+        document.getElementById('ac-outfit').value=c.outfit||'';
+        document.getElementById('ac-scene').value=c.scene||'';
+        voiceId=c.voiceId||null; voiceName=c.voiceName||null;
+        if(voiceId){ var vs=document.getElementById('ac-voiceSel'); vs.value=voiceId; }
+        window.toast('Loaded '+(c.name||'character'));
+        window.scrollTo({top:0,behavior:'smooth'});
+      };
+    });
+    box.querySelectorAll('[data-del]').forEach(function(btn){
+      btn.onclick=function(){ window.TBStore.deleteCharacter(btn.getAttribute('data-del')); renderSaved(); };
+    });
+  }
+  renderSaved();
+})();
+</script>
+</body>
+</html>
