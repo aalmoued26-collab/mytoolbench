@@ -1,16 +1,19 @@
 # Toolbench — Netlify config (Git-based deploy)
-# Netlify builds from the repo, bundles the functions in netlify/functions,
-# and publishes the repo root as the site.
+# ALL backend endpoints live in ONE file: fns/api.js  (function name "api").
+# Every /api/* request is rewritten to that single function, which routes
+# internally. The old netlify/functions folder is NOT used, so any leftover or
+# badly-named files there are ignored and cannot break the build.
 
 [build]
   publish = "."
-  functions = "netlify/functions"
+  functions = "fns"
 
 [functions]
   node_bundler = "esbuild"
 
-# Pretty API paths: /api/character -> the function
+# Pretty API paths -> the single router function.
+# /api/combine -> /.netlify/functions/api/combine (router reads "combine").
 [[redirects]]
   from = "/api/*"
-  to = "/.netlify/functions/:splat"
+  to = "/.netlify/functions/api/:splat"
   status = 200

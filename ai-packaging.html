@@ -62,40 +62,59 @@
       <div><label class="check" style="margin-top:26px"><input type="checkbox" id="pk-barcode" checked> Barcode</label></div>
     </div>
     <div class="row" style="margin-top:12px">
-      <div><label class="field">Ingredients (back panel)</label><textarea id="pk-ing" style="min-height:70px" dir="auto" placeholder="Wheat flour, chicken, onion, spices, sunflower oil…"></textarea></div>
-      <div><label class="field">Nutrition — one per line as “label: value”</label><textarea id="pk-nut" style="min-height:70px" dir="auto" placeholder="Energy: 250 kcal&#10;Fat: 12 g&#10;Carbohydrate: 28 g&#10;Protein: 7 g&#10;Salt: 0.8 g"></textarea></div>
+      <div><label class="field">Ingredients (back panel)</label><textarea id="pk-ing" style="min-height:70px" dir="auto" placeholder="Leave blank for demo text — Wheat flour, chicken, onion, spices, sunflower oil…"></textarea></div>
+      <div><label class="field">Nutrition — one per line as “label: value”</label><textarea id="pk-nut" style="min-height:70px" dir="auto" placeholder="Leave blank for demo — Energy: 250 kcal&#10;Fat: 12 g&#10;Carbohydrate: 28 g&#10;Protein: 7 g&#10;Salt: 0.8 g"></textarea></div>
+    </div>
+    <div class="row" style="margin-top:12px">
+      <div><label class="field">Preparation / cooking instructions</label><textarea id="pk-instr" style="min-height:56px" dir="auto" placeholder="Leave blank for demo — Oven: bake from frozen at 200°C for 12–15 min…"></textarea></div>
+      <div><label class="field">Storage</label><textarea id="pk-store" style="min-height:56px" dir="auto" placeholder="Leave blank for demo — Keep frozen at −18°C. Do not refreeze once thawed."></textarea></div>
+    </div>
+    <div class="row" style="margin-top:12px">
+      <div><label class="field">Allergens</label><input type="text" id="pk-allerg" dir="auto" placeholder="Contains: gluten. May contain: sesame."></div>
+      <div><label class="field">Best before / batch</label><input type="text" id="pk-best" dir="auto" placeholder="Best before: printed on top · Batch: L-000"></div>
+      <div><label class="field">Website / contact</label><input type="text" id="pk-web" dir="auto" placeholder="www.brand.com · +965 …"></div>
     </div>
     <div class="row" style="margin-top:12px">
       <div><label class="field">Footer / produced-in line</label><input type="text" id="pk-produced" dir="auto" value="Produced in Kuwait — صنع في الكويت"></div>
     </div>
     <div class="controls">
-      <button class="btn btn-ghost" id="pk-dieline">Generate full die design</button>
-      <button class="btn btn-primary" id="pk-mockup">Generate 3D mockup</button>
+      <button class="btn btn-primary" id="pk-dieline">Generate full package (all sides)</button>
+      <button class="btn btn-ghost" id="pk-mockup">Generate 3D mockups</button>
       <span class="hint" id="pk-status" style="margin:0;align-self:center"></span>
     </div>
-    <p class="hint">Upload your product design in step 1 — it becomes the <b>front</b>. The <b>back</b> shows your ingredients, nutrition &amp; barcode; the <b>sides</b> show your logo &amp; product name. All editable. Download is a print-ready SVG (scales to any resolution).</p>
+    <p class="hint">Enter a <b>product name</b> and a <b>logo</b> (and optionally your artwork in step 1, or an example box below) and hit <b>Generate full package</b>. You get all six panels — <b>front, back, both sides, top &amp; bottom</b> — with demo barcode, demo nutrition, ingredients, prep instructions and a product-photo area auto-filled. Edit any field, then press <b>✓ Approve &amp; refit</b> to lay it all back onto the print-ready die-cut.</p>
   </div>
 
   <div class="panel">
-    <p class="panel-label">Mockup — design from scratch <span style="color:var(--faint)">(optional, no existing design)</span></p>
+    <p class="panel-label">Full 3D mockup — design from scratch <span style="color:var(--faint)">(all sides)</span></p>
     <div class="row">
-      <div><label class="field">Reference / example box (optional)</label><input type="file" id="pk-example" accept="image/*" style="padding:10px"></div>
-      <div><label class="field">Text to feature on the pack</label><input type="text" id="pk-text" dir="auto" placeholder="e.g. Sweet Gaymat · حلوة القيمات"></div>
-      <div><label class="field">Describe the product / style</label><input type="text" id="pk-desc" placeholder="e.g. traditional Kuwaiti sweet, heritage look, gold Sadu accents"></div>
+      <div><label class="field">Example / reference box (optional)</label><input type="file" id="pk-example" accept="image/*" style="padding:10px"></div>
+      <div><label class="field">Your product photo (optional)</label><input type="file" id="pk-product" accept="image/*" style="padding:10px"></div>
+      <div><label class="field">Text to feature on the pack</label><input type="text" id="pk-text" dir="auto" placeholder="e.g. Le Oven · Artisan Frozen Pizza"></div>
     </div>
-    <p class="hint">To <b>design</b> a package (no artwork yet): add your <b>logo</b> (above), a <b>reference box</b>, and a description, then hit <b>Generate 3D mockup</b> — it creates a creative pack from several angles. If you uploaded a design in step 1, the mockups wrap that instead.</p>
+    <div class="row" style="margin-top:12px">
+      <div><label class="field">Describe the product / style</label><input type="text" id="pk-desc" placeholder="e.g. luxury frozen pizza, elegant minimalist, blush pink &amp; gold, fashion-house look"></div>
+    </div>
+    <div id="pk-refprev" class="checks" style="margin-top:10px"></div>
+    <p class="hint">Upload your <b>logo</b> (step 1), optionally an <b>example box</b> and your <b>product photo</b>, describe the style, then hit <b>Generate 3D mockups</b>. It designs a creative premium package featuring your logo and product, and renders it as a realistic 3D box from <b>every side — front, back, side, top, and an all-sides layout</b>. If you uploaded finished artwork in step 1, the mockups wrap that instead.</p>
   </div>
 
   <div class="panel" id="pk-diePanel" style="display:none">
-    <p class="panel-label">Print-ready dieline (1:1 mm)</p>
+    <p class="panel-label">Print-ready die design — all six panels (1:1 mm)</p>
     <div id="pk-dieView" style="overflow:auto;border:1px solid var(--line);border-radius:10px;background:#fff;padding:10px"></div>
-    <div class="controls"><a class="btn btn-ghost btn-sm" id="pk-dieDownload" download="dieline.svg">Download SVG</a>
-      <span class="hint" style="margin:0;align-self:center">Magenta = cut · blue dashed = fold · grey = 3&nbsp;mm bleed</span></div>
+    <div class="controls">
+      <button class="btn btn-primary btn-sm" id="pk-approve">✓ Approve &amp; refit die-cut</button>
+      <a class="btn btn-ghost btn-sm" id="pk-dieDownload" download="die-design.svg">Download SVG</a>
+      <span class="hint" style="margin:0;align-self:center">Edit any field above, then Approve to refit · Magenta = cut · blue dashed = fold · grey = 3&nbsp;mm bleed</span></div>
   </div>
 
   <div class="panel" id="pk-mockPanel" style="display:none">
-    <p class="panel-label">Photorealistic mockups — your design, several angles</p>
+    <p class="panel-label">Full 3D mockup — every side (front · back · side · top · all-sides)</p>
     <div id="pk-mockGallery" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px"></div>
+    <div class="controls" style="margin-top:14px">
+      <button class="btn btn-primary" id="pk-approve3d">✓ Approve this design &amp; fit to die-cut</button>
+      <span class="hint" id="pk-approve3dhint" style="margin:0;align-self:center">Lays the approved front onto the print-ready die with demo barcode, nutrition &amp; all details on every panel.</span>
+    </div>
   </div>
   </div>
 
@@ -111,13 +130,16 @@
 <script src="dielines.js"></script>
 <script>
 (function(){
-  var colors=['#2B41D8','#16171B'], artworkData=null, pkLogoData=null;
+  var colors=['#2B41D8','#16171B'], artworkData=null, pkLogoData=null, approvedFront=null, mockFrontUrl=null;
   try{ pkLogoData=localStorage.getItem('tb_brand_logo'); }catch(e){}
   document.getElementById('pk-logo').onchange=function(e){ var f=e.target.files[0]; if(!f)return;
     var r=new FileReader(); r.onload=function(){ pkLogoData=r.result; }; r.readAsDataURL(f); };
-  var pkExampleData=null;
+  var pkExampleData=null, pkProductData=null;
+  function refThumb(url,label){ var box=document.getElementById('pk-refprev'); var s=document.createElement('span'); s.className='check'; s.innerHTML='<img src="'+url+'" style="width:52px;height:52px;object-fit:cover;border-radius:6px">&nbsp;'+label; box.appendChild(s); }
   document.getElementById('pk-example').onchange=function(e){ var f=e.target.files[0]; if(!f)return;
-    var r=new FileReader(); r.onload=function(){ pkExampleData=r.result; }; r.readAsDataURL(f); };
+    var r=new FileReader(); r.onload=function(){ pkExampleData=r.result; refThumb(r.result,'example'); }; r.readAsDataURL(f); };
+  document.getElementById('pk-product').onchange=function(e){ var f=e.target.files[0]; if(!f)return;
+    var r=new FileReader(); r.onload=function(){ pkProductData=r.result; refThumb(r.result,'product'); }; r.readAsDataURL(f); };
   document.getElementById('pk-file').onchange=function(e){
     var f=e.target.files[0]; if(!f)return;
     var r=new FileReader();
@@ -143,77 +165,82 @@
   };
   function lum(h){ h=h.replace('#',''); var n=parseInt(h,16); return (n>>16&255)*0.3+(n>>8&255)*0.59+(n&255)*0.11; }
   function parseNut(){ return document.getElementById('pk-nut').value.split(/\n/).map(function(l){var i=l.indexOf(':');if(i<0)return null;return {label:l.slice(0,i).trim(),value:l.slice(i+1).trim()};}).filter(function(x){return x&&x.label;}); }
-  function spec(){
-    return { style:document.getElementById('pk-style').value,
+  function v(id){ var e=document.getElementById(id); return e?e.value.trim():''; }
+  function dieSpec(){
+    return {
+      style:document.getElementById('pk-style').value,
       width_mm:+document.getElementById('pk-w').value||80,
       depth_mm:+document.getElementById('pk-d').value||40,
       height_mm:+document.getElementById('pk-h').value||150,
       material:document.getElementById('pk-finish').value,
-      artwork:artworkData,
-      title:(document.getElementById('pk-name').value||'Package')+' — '+document.getElementById('pk-style').value };
+      frontImg:(approvedFront||artworkData||pkExampleData||null),   // approved 3D front, else artwork, else example, else from-scratch
+      brandColor:document.getElementById('pk-color').value,
+      logoImg:pkLogoData||null,
+      productName:v('pk-name')||'Product Name',
+      ingredients:v('pk-ing'), nutrition:parseNut(),
+      instructions:v('pk-instr'), storage:v('pk-store'),
+      allergens:v('pk-allerg'), bestBefore:v('pk-best'), website:v('pk-web'),
+      netWeight:v('pk-weight'), producedIn:v('pk-produced'),
+      barcode:document.getElementById('pk-barcode').checked,
+      title:v('pk-name')||'Package'
+    };
   }
-  document.getElementById('pk-dieline').onclick=function(){
-    var svg;
-    if(artworkData){
-      svg=window.buildPackagingArt({
-        style:document.getElementById('pk-style').value,
-        width_mm:+document.getElementById('pk-w').value||80,
-        depth_mm:+document.getElementById('pk-d').value||40,
-        height_mm:+document.getElementById('pk-h').value||150,
-        material:document.getElementById('pk-finish').value,
-        frontImg:artworkData, brandColor:document.getElementById('pk-color').value,
-        logoImg:pkLogoData||null, productName:document.getElementById('pk-name').value||'Product',
-        ingredients:document.getElementById('pk-ing').value.trim(), nutrition:parseNut(),
-        netWeight:document.getElementById('pk-weight').value.trim(),
-        producedIn:document.getElementById('pk-produced').value.trim(),
-        barcode:document.getElementById('pk-barcode').checked,
-        title:(document.getElementById('pk-name').value||'Package')
-      });
-    } else {
-      window.toast('Upload your product design in step 1 for the full die design');
-      svg=window.buildDieline(spec());
-    }
+  function buildDie(msg){
+    var svg=window.buildPackagingArt(dieSpec());
     document.getElementById('pk-dieView').innerHTML=svg;
     var sv=document.getElementById('pk-dieView').querySelector('svg');
     if(sv){sv.style.maxWidth='100%'; sv.style.height='auto';}
     var blob=new Blob([svg],{type:'image/svg+xml'});
     document.getElementById('pk-dieDownload').href=URL.createObjectURL(blob);
     document.getElementById('pk-diePanel').style.display='';
-    window.toast('Dieline ready');
+    window.toast(msg||'Full package ready — edit any field, then Approve');
+    document.getElementById('pk-diePanel').scrollIntoView({behavior:'smooth',block:'start'});
+  }
+  document.getElementById('pk-dieline').onclick=function(){ buildDie('Full package ready — all six panels'); };
+  document.getElementById('pk-approve').onclick=function(){ buildDie('✓ Approved — details refitted onto the die-cut'); };
+  document.getElementById('pk-approve3d').onclick=function(){
+    if(!mockFrontUrl && !artworkData && !pkExampleData){ window.toast('Generate the 3D mockup first'); return; }
+    approvedFront = mockFrontUrl || null;   // use the approved front render as the die front
+    buildDie('✓ Design approved — fitted onto the die with all details');
   };
   var ANGLES=[
-    'three-quarter hero angle showing the front and one side',
-    'flat front-facing packshot, straight on',
-    'back panel facing the camera',
-    'top-down angle showing the lid'
+    {label:'Front hero', a:'a three-quarter hero angle showing the FRONT face and the TOP of the box, standing upright'},
+    {label:'Front', a:'a straight-on FRONT packshot, front face filling the frame'},
+    {label:'Back', a:'the BACK panel of the same box facing the camera, showing the back design'},
+    {label:'Side', a:'a clean SIDE profile of the same box, showing the side panel'},
+    {label:'Top', a:'a top-down angle looking at the TOP / lid of the box'},
+    {label:'All sides', a:'a neat product-mockup layout showing the SAME box from several sides at once — front, back, side and top — arranged together on one seamless studio background, the identical design and logo on every face, like a brand packaging presentation sheet'}
   ];
   document.getElementById('pk-mockup').onclick=async function(){
-    if(!artworkData && !pkExampleData && !pkLogoData){ window.toast('Upload a design in step 1, OR a logo + reference box to design from scratch'); return; }
+    if(!artworkData && !pkExampleData && !pkLogoData && !pkProductData){ window.toast('Upload a design in step 1, OR a logo / product / example box to design from scratch'); return; }
     var st=document.getElementById('pk-status'), btn=this;
     var gallery=document.getElementById('pk-mockGallery');
     gallery.innerHTML=''; document.getElementById('pk-mockPanel').style.display='';
     btn.disabled=true;
     for(var i=0;i<ANGLES.length;i++){
-      st.textContent='Generating mockup '+(i+1)+' of '+ANGLES.length+'…';
+      st.textContent='Rendering 3D mockup '+(i+1)+' of '+ANGLES.length+' ('+ANGLES[i].label+')…';
       try{
         var res=await fetch('/api/packaging-mockup',{method:'POST',headers:{'Content-Type':'application/json'},
           body:JSON.stringify({ artworkDataUrl:artworkData||undefined,
             exampleBoxDataUrl:(!artworkData?pkExampleData:undefined)||undefined,
             logoDataUrl:(!artworkData?pkLogoData:undefined)||undefined,
+            productDataUrl:(!artworkData?pkProductData:undefined)||undefined,
             description:document.getElementById('pk-desc').value.trim(),
             text:document.getElementById('pk-text').value.trim(),
             colors:colors, boxStyle:document.getElementById('pk-style').value,
             productName:document.getElementById('pk-name').value, finish:document.getElementById('pk-finish').value,
-            angle:ANGLES[i] })});
+            angle:ANGLES[i].a })});
         var j=await res.json();
         if(!res.ok){ window.toast(j.error||'A mockup failed'); st.textContent=j.error||'Failed'; continue; }
+        if(ANGLES[i].label==='Front' || (!mockFrontUrl && ANGLES[i].label==='Front hero')) mockFrontUrl=j.imageUrl;
         var card=document.createElement('div');
-        card.innerHTML='<img src="'+j.imageUrl+'" alt="Mockup" style="width:100%;border:1px solid var(--line);border-radius:10px;background:#fff">'+
-          '<a class="btn btn-ghost btn-sm" style="margin-top:8px" href="'+j.imageUrl+'" download="mockup-'+(i+1)+'.png">Download</a>';
+        card.innerHTML='<img src="'+j.imageUrl+'" alt="'+ANGLES[i].label+' mockup" style="width:100%;border:1px solid var(--line);border-radius:10px;background:#fff">'+
+          '<div class="hint" style="margin:6px 0 4px">'+ANGLES[i].label+'</div>'+
+          '<a class="btn btn-ghost btn-sm" href="'+j.imageUrl+'" download="mockup-'+ANGLES[i].label.toLowerCase().replace(/ /g,'-')+'.png">Download</a>';
         gallery.appendChild(card);
       }catch(err){ window.toast('Network error'); st.textContent=String(err); }
     }
-    btn.disabled=false; st.textContent='Done'; window.toast('Mockups ready');
+    btn.disabled=false; st.textContent='Done'; window.toast('3D mockups ready — all sides');
   };
 })();
 </script>

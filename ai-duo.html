@@ -240,9 +240,10 @@
       }).catch(function(err){btn.disabled=false; st.textContent=String(err); window.toast('Network error');});
   };
 
-  function poll(model, requestId, st, done){
+  function poll(model, requestId, st, done, endpoint){
+    var url=endpoint||'/api/generate-status';
     var tries=0; var iv=setInterval(function(){ tries++;
-      fetch('/api/generate-status',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:model,requestId:requestId})})
+      fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:model,requestId:requestId})})
         .then(function(x){return x.json();})
         .then(function(j){ if(j.status==='done'){clearInterval(iv);done(null,j.videoUrl);}
           else if(j.status==='failed'||j.error){clearInterval(iv);done(new Error(j.error||'Failed'));}
@@ -255,21 +256,21 @@
     var framing=document.getElementById('du-framing').value;
     var baseAction=document.getElementById('du-action').value.trim();
     var motion = framing==='selfie'
-      ? ('Handheld selfie-camera vlog recorded on a phone: the person looks into the lens and talks to camera with natural mouth and head movement, the other person leans in and reacts, gentle handheld sway, lively social-media energy'
+      ? ('A live phone selfie-camera stream — our view IS the phone front camera: the person holds the phone at arm\'s length and talks directly into the lens with natural lip and mouth movement, blinking and lively facial expressions, the other person leans into frame and reacts, subtle realistic handheld camera shake, authentic live vlog / streaming energy, photorealistic'
          + (baseAction ? ', while '+baseAction : ''))
       : baseAction;
     btn.disabled=true; st.textContent='Starting…';
-    fetch('/api/generate-start',{method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({ mode:'action', characterImageUrl:comboUrl,
+    fetch('/api/animate',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({ characterImageUrl:comboUrl,
         action:motion, scene:document.getElementById('du-scene').value.trim() })})
       .then(function(x){return x.json().then(function(j){return {ok:x.ok,j:j};});})
-      .then(function(res){ if(!res.ok){btn.disabled=false; st.textContent=res.j.error||'Failed'; return;}
+      .then(function(res){ if(!res.ok){btn.disabled=false; st.textContent=res.j.error||'Failed'; window.toast(res.j.error||'Failed'); return;}
         st.textContent='Rendering… (1–3 min)';
         poll(res.j.model,res.j.requestId,st,function(err,url){ btn.disabled=false;
           if(err){st.textContent=String(err.message||err); window.toast(String(err.message||err)); return;}
           st.textContent='Done'; var v=document.getElementById('du-video'); v.src=url; v.style.display='';
           document.getElementById('du-vdownload').href=url; document.getElementById('du-vdl').style.display=''; window.toast('Clip ready');
-        });
+        }, '/api/animate-status');
       }).catch(function(err){btn.disabled=false; st.textContent=String(err); window.toast('Network error');});
   };
 

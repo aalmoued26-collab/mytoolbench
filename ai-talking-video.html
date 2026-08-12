@@ -140,6 +140,7 @@
 <div id="site-footer"></div>
 <script src="app.js"></script>
 <script src="tb-store.js"></script>
+<script src="tb-voices.js"></script>
 <script>
 (function(){
   var charUrl=null, voiceId=null, recordedData=null, mode='talking', sub='record';
@@ -170,10 +171,9 @@
   // handoff from the character studio ("Use in video")
   try{ var pending=localStorage.getItem('tb_video_character'); if(pending){ charUrl=pending; document.getElementById('tv-img').src=pending; document.getElementById('tv-imgprev').style.display=''; localStorage.removeItem('tb_video_character'); } }catch(e){}
 
-  // ---- voice ----
+  // ---- voice ---- (character voice + Toolbench-saved + ElevenLabs library)
   function fillVoices(){
-    var sel=document.getElementById('tv-voiceSel'); var list=window.TBStore.listVoices();
-    sel.innerHTML='<option value="">Default voice</option>'+list.map(function(v){return '<option value="'+v.voiceId+'">'+(v.name||'Voice')+'</option>';}).join('');
+    window.TBVoices.fill(document.getElementById('tv-voiceSel'), { firstLabel:'Default voice' });
   }
   fillVoices();
   document.getElementById('tv-voiceSel').onchange=function(){ voiceId=this.value||null; };

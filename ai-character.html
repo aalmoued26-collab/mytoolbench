@@ -114,6 +114,7 @@
 <div id="site-footer"></div>
 <script src="app.js"></script>
 <script src="tb-store.js"></script>
+<script src="tb-voices.js"></script>
 <script>
 (function(){
   var baseData=null, thumb=null, shots=[];
@@ -146,8 +147,7 @@
 
   // ---- character voice ----
   var voiceId=null, voiceName=null;
-  function fillVoices(){ var sel=document.getElementById('ac-voiceSel'); var list=window.TBStore.listVoices();
-    sel.innerHTML='<option value="">— none —</option>'+list.map(function(v){return '<option value="'+v.voiceId+'">'+(v.name||'Voice')+'</option>';}).join(''); }
+  function fillVoices(){ window.TBVoices.fill(document.getElementById('ac-voiceSel'), { firstLabel:'— none —' }); }
   fillVoices();
   document.getElementById('ac-voiceSel').onchange=function(){ voiceId=this.value||null; voiceName=this.selectedOptions[0]?this.selectedOptions[0].textContent:null; };
   document.getElementById('ac-voice-go').onclick=function(){
