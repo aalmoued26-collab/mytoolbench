@@ -1,0 +1,15 @@
+# Toolbench — Netlify config (Git-based deploy)
+# Functions are bundled from netlify/functions.
+
+[build]
+  publish = "."
+  functions = "netlify/functions"
+
+[functions]
+  node_bundler = "esbuild"
+
+# Pretty API paths: /api/character -> the function
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/:splat"
+  status = 200
