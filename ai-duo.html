@@ -240,10 +240,9 @@
       }).catch(function(err){btn.disabled=false; st.textContent=String(err); window.toast('Network error');});
   };
 
-  function poll(model, requestId, st, done, endpoint){
-    var url=endpoint||'/api/generate-status';
+  function poll(model, requestId, st, done){
     var tries=0; var iv=setInterval(function(){ tries++;
-      fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:model,requestId:requestId})})
+      fetch('/api/generate-status',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:model,requestId:requestId})})
         .then(function(x){return x.json();})
         .then(function(j){ if(j.status==='done'){clearInterval(iv);done(null,j.videoUrl);}
           else if(j.status==='failed'||j.error){clearInterval(iv);done(new Error(j.error||'Failed'));}
@@ -260,17 +259,17 @@
          + (baseAction ? ', while '+baseAction : ''))
       : baseAction;
     btn.disabled=true; st.textContent='Starting…';
-    fetch('/api/animate',{method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({ characterImageUrl:comboUrl,
+    fetch('/api/generate-start',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({ mode:'action', characterImageUrl:comboUrl,
         action:motion, scene:document.getElementById('du-scene').value.trim() })})
       .then(function(x){return x.json().then(function(j){return {ok:x.ok,j:j};});})
-      .then(function(res){ if(!res.ok){btn.disabled=false; st.textContent=res.j.error||'Failed'; window.toast(res.j.error||'Failed'); return;}
+      .then(function(res){ if(!res.ok){btn.disabled=false; st.textContent=res.j.error||'Failed'; return;}
         st.textContent='Rendering… (1–3 min)';
         poll(res.j.model,res.j.requestId,st,function(err,url){ btn.disabled=false;
           if(err){st.textContent=String(err.message||err); window.toast(String(err.message||err)); return;}
           st.textContent='Done'; var v=document.getElementById('du-video'); v.src=url; v.style.display='';
           document.getElementById('du-vdownload').href=url; document.getElementById('du-vdl').style.display=''; window.toast('Clip ready');
-        }, '/api/animate-status');
+        });
       }).catch(function(err){btn.disabled=false; st.textContent=String(err); window.toast('Network error');});
   };
 

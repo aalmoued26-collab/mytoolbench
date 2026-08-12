@@ -62,27 +62,18 @@
       <div><label class="check" style="margin-top:26px"><input type="checkbox" id="pk-barcode" checked> Barcode</label></div>
     </div>
     <div class="row" style="margin-top:12px">
-      <div><label class="field">Ingredients (back panel)</label><textarea id="pk-ing" style="min-height:70px" dir="auto" placeholder="Leave blank for demo text — Wheat flour, chicken, onion, spices, sunflower oil…"></textarea></div>
-      <div><label class="field">Nutrition — one per line as “label: value”</label><textarea id="pk-nut" style="min-height:70px" dir="auto" placeholder="Leave blank for demo — Energy: 250 kcal&#10;Fat: 12 g&#10;Carbohydrate: 28 g&#10;Protein: 7 g&#10;Salt: 0.8 g"></textarea></div>
-    </div>
-    <div class="row" style="margin-top:12px">
-      <div><label class="field">Preparation / cooking instructions</label><textarea id="pk-instr" style="min-height:56px" dir="auto" placeholder="Leave blank for demo — Oven: bake from frozen at 200°C for 12–15 min…"></textarea></div>
-      <div><label class="field">Storage</label><textarea id="pk-store" style="min-height:56px" dir="auto" placeholder="Leave blank for demo — Keep frozen at −18°C. Do not refreeze once thawed."></textarea></div>
-    </div>
-    <div class="row" style="margin-top:12px">
-      <div><label class="field">Allergens</label><input type="text" id="pk-allerg" dir="auto" placeholder="Contains: gluten. May contain: sesame."></div>
-      <div><label class="field">Best before / batch</label><input type="text" id="pk-best" dir="auto" placeholder="Best before: printed on top · Batch: L-000"></div>
-      <div><label class="field">Website / contact</label><input type="text" id="pk-web" dir="auto" placeholder="www.brand.com · +965 …"></div>
+      <div><label class="field">Ingredients (back panel)</label><textarea id="pk-ing" style="min-height:70px" dir="auto" placeholder="Wheat flour, chicken, onion, spices, sunflower oil…"></textarea></div>
+      <div><label class="field">Nutrition — one per line as “label: value”</label><textarea id="pk-nut" style="min-height:70px" dir="auto" placeholder="Energy: 250 kcal&#10;Fat: 12 g&#10;Carbohydrate: 28 g&#10;Protein: 7 g&#10;Salt: 0.8 g"></textarea></div>
     </div>
     <div class="row" style="margin-top:12px">
       <div><label class="field">Footer / produced-in line</label><input type="text" id="pk-produced" dir="auto" value="Produced in Kuwait — صنع في الكويت"></div>
     </div>
     <div class="controls">
-      <button class="btn btn-primary" id="pk-dieline">Generate full package (all sides)</button>
-      <button class="btn btn-ghost" id="pk-mockup">Generate 3D mockups</button>
+      <button class="btn btn-ghost" id="pk-dieline">Generate full die design</button>
+      <button class="btn btn-primary" id="pk-mockup">Generate 3D mockup</button>
       <span class="hint" id="pk-status" style="margin:0;align-self:center"></span>
     </div>
-    <p class="hint">Enter a <b>product name</b> and a <b>logo</b> (and optionally your artwork in step 1, or an example box below) and hit <b>Generate full package</b>. You get all six panels — <b>front, back, both sides, top &amp; bottom</b> — with demo barcode, demo nutrition, ingredients, prep instructions and a product-photo area auto-filled. Edit any field, then press <b>✓ Approve &amp; refit</b> to lay it all back onto the print-ready die-cut.</p>
+    <p class="hint">Upload your product design in step 1 — it becomes the <b>front</b>. The <b>back</b> shows your ingredients, nutrition &amp; barcode; the <b>sides</b> show your logo &amp; product name. All editable. Download is a print-ready SVG (scales to any resolution).</p>
   </div>
 
   <div class="panel">
@@ -96,12 +87,10 @@
   </div>
 
   <div class="panel" id="pk-diePanel" style="display:none">
-    <p class="panel-label">Print-ready die design — all six panels (1:1 mm)</p>
+    <p class="panel-label">Print-ready dieline (1:1 mm)</p>
     <div id="pk-dieView" style="overflow:auto;border:1px solid var(--line);border-radius:10px;background:#fff;padding:10px"></div>
-    <div class="controls">
-      <button class="btn btn-primary btn-sm" id="pk-approve">✓ Approve &amp; refit die-cut</button>
-      <a class="btn btn-ghost btn-sm" id="pk-dieDownload" download="die-design.svg">Download SVG</a>
-      <span class="hint" style="margin:0;align-self:center">Edit any field above, then Approve to refit · Magenta = cut · blue dashed = fold · grey = 3&nbsp;mm bleed</span></div>
+    <div class="controls"><a class="btn btn-ghost btn-sm" id="pk-dieDownload" download="dieline.svg">Download SVG</a>
+      <span class="hint" style="margin:0;align-self:center">Magenta = cut · blue dashed = fold · grey = 3&nbsp;mm bleed</span></div>
   </div>
 
   <div class="panel" id="pk-mockPanel" style="display:none">
@@ -154,39 +143,44 @@
   };
   function lum(h){ h=h.replace('#',''); var n=parseInt(h,16); return (n>>16&255)*0.3+(n>>8&255)*0.59+(n&255)*0.11; }
   function parseNut(){ return document.getElementById('pk-nut').value.split(/\n/).map(function(l){var i=l.indexOf(':');if(i<0)return null;return {label:l.slice(0,i).trim(),value:l.slice(i+1).trim()};}).filter(function(x){return x&&x.label;}); }
-  function v(id){ var e=document.getElementById(id); return e?e.value.trim():''; }
-  function dieSpec(){
-    return {
-      style:document.getElementById('pk-style').value,
+  function spec(){
+    return { style:document.getElementById('pk-style').value,
       width_mm:+document.getElementById('pk-w').value||80,
       depth_mm:+document.getElementById('pk-d').value||40,
       height_mm:+document.getElementById('pk-h').value||150,
       material:document.getElementById('pk-finish').value,
-      frontImg:(artworkData||pkExampleData||null),   // artwork, else example box, else designed-from-scratch
-      brandColor:document.getElementById('pk-color').value,
-      logoImg:pkLogoData||null,
-      productName:v('pk-name')||'Product Name',
-      ingredients:v('pk-ing'), nutrition:parseNut(),
-      instructions:v('pk-instr'), storage:v('pk-store'),
-      allergens:v('pk-allerg'), bestBefore:v('pk-best'), website:v('pk-web'),
-      netWeight:v('pk-weight'), producedIn:v('pk-produced'),
-      barcode:document.getElementById('pk-barcode').checked,
-      title:v('pk-name')||'Package'
-    };
+      artwork:artworkData,
+      title:(document.getElementById('pk-name').value||'Package')+' — '+document.getElementById('pk-style').value };
   }
-  function buildDie(msg){
-    var svg=window.buildPackagingArt(dieSpec());
+  document.getElementById('pk-dieline').onclick=function(){
+    var svg;
+    if(artworkData){
+      svg=window.buildPackagingArt({
+        style:document.getElementById('pk-style').value,
+        width_mm:+document.getElementById('pk-w').value||80,
+        depth_mm:+document.getElementById('pk-d').value||40,
+        height_mm:+document.getElementById('pk-h').value||150,
+        material:document.getElementById('pk-finish').value,
+        frontImg:artworkData, brandColor:document.getElementById('pk-color').value,
+        logoImg:pkLogoData||null, productName:document.getElementById('pk-name').value||'Product',
+        ingredients:document.getElementById('pk-ing').value.trim(), nutrition:parseNut(),
+        netWeight:document.getElementById('pk-weight').value.trim(),
+        producedIn:document.getElementById('pk-produced').value.trim(),
+        barcode:document.getElementById('pk-barcode').checked,
+        title:(document.getElementById('pk-name').value||'Package')
+      });
+    } else {
+      window.toast('Upload your product design in step 1 for the full die design');
+      svg=window.buildDieline(spec());
+    }
     document.getElementById('pk-dieView').innerHTML=svg;
     var sv=document.getElementById('pk-dieView').querySelector('svg');
     if(sv){sv.style.maxWidth='100%'; sv.style.height='auto';}
     var blob=new Blob([svg],{type:'image/svg+xml'});
     document.getElementById('pk-dieDownload').href=URL.createObjectURL(blob);
     document.getElementById('pk-diePanel').style.display='';
-    window.toast(msg||'Full package ready — edit any field, then Approve');
-    document.getElementById('pk-diePanel').scrollIntoView({behavior:'smooth',block:'start'});
-  }
-  document.getElementById('pk-dieline').onclick=function(){ buildDie('Full package ready — all six panels'); };
-  document.getElementById('pk-approve').onclick=function(){ buildDie('✓ Approved — details refitted onto the die-cut'); };
+    window.toast('Dieline ready');
+  };
   var ANGLES=[
     'three-quarter hero angle showing the front and one side',
     'flat front-facing packshot, straight on',
