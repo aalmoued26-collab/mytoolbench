@@ -81,6 +81,13 @@
         <option value="clean studio with soft light">Clean studio</option>
       </select>
     </div>
+    <div class="row" style="margin-top:12px">
+      <div><label class="field">Add product photos to the scene <span style="color:var(--faint)">(e.g. a Mama Noura box on the table)</span></label>
+        <input type="file" id="du-products" accept="image/*" multiple style="padding:10px">
+        <div id="du-prodprev" class="checks" style="margin-top:8px"></div></div>
+      <div><label class="field">Where / how the products appear</label><input type="text" id="du-prodnote" placeholder="e.g. the box sits on the kitchen table, held up to camera"></div>
+      <div><label class="field">Video length</label><select id="du-duration"><option value="5">5 seconds</option><option value="10">10 seconds</option></select></div>
+    </div>
     <div class="controls">
       <button class="btn btn-primary" id="du-make">Generate together</button>
       <span class="hint" id="du-status" style="margin:0;align-self:center"></span>
@@ -146,6 +153,23 @@
 
     </div>
     <p class="hint">Tip: recording your own delivery (then speech-to-speech) syncs the mouth most naturally. Put the three clips — the together b-roll, A talking, B talking — into any editor (CapCut works on your phone) to finish the vlog.</p>
+  </div>
+
+  <div class="panel">
+    <p class="panel-label">4 · Story mode — a longer video from several shots</p>
+    <p class="hint" style="margin-top:0">AI video is 5–10s per shot, so a 30s–1min video is built from several shots cut together. Add each shot below (scene + what happens + length). It generates a clip for every shot — download them in order and drop them into CapCut to make the full-length video. Your uploaded products and chosen characters carry into every shot.</p>
+    <div class="row">
+      <div><label class="field">Shot — what happens</label><input type="text" id="st-action" placeholder="e.g. sitting in the living room telling her story"></div>
+      <div><label class="field">Scene / location for this shot</label><input type="text" id="st-scene" placeholder="e.g. cozy modern living room, warm light"></div>
+      <div><label class="field">Length</label><select id="st-dur"><option value="5">5s</option><option value="10">10s</option></select></div>
+      <div><button class="btn btn-primary btn-sm" id="st-add" style="margin-top:26px">+ Add shot</button></div>
+    </div>
+    <div id="st-list" style="margin-top:10px"></div>
+    <div class="controls">
+      <button class="btn btn-primary" id="st-make">Generate storyboard</button>
+      <span class="hint" id="st-status" style="margin:0;align-self:center"></span>
+    </div>
+    <div id="st-gallery" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px;margin-top:12px"></div>
   </div>
   </div>
 
@@ -218,6 +242,16 @@
     if(this.value){ document.getElementById('du-scene').value=this.value; }
   };
 
+  // product photos to place in the scene
+  var duProducts=[];
+  document.getElementById('du-products').onchange=function(e){
+    duProducts=[]; var box=document.getElementById('du-prodprev'); box.innerHTML='';
+    var files=Array.prototype.slice.call(e.target.files||[]).slice(0,3);
+    files.forEach(function(f){ var r=new FileReader(); r.onload=function(){ duProducts.push(r.result);
+      var s=document.createElement('span'); s.className='check'; s.innerHTML='<img src="'+r.result+'" style="width:46px;height:46px;object-fit:cover;border-radius:6px">'; box.appendChild(s);
+    }; r.readAsDataURL(f); });
+  };
+
   document.getElementById('du-make').onclick=function(){
     if(!imgA||!imgB){window.toast('Pick a shot for both characters');return;}
     var st=document.getElementById('du-status'), btn=this;
@@ -228,6 +262,8 @@
         outfitA:document.getElementById('du-outfitA').value.trim(),
         outfitB:document.getElementById('du-outfitB').value.trim(),
         framing:document.getElementById('du-framing').value,
+        products:duProducts,
+        productNote:document.getElementById('du-prodnote').value.trim(),
         aspect:document.getElementById('du-aspect').value })})
       .then(function(x){return x.json().then(function(j){return {ok:x.ok,j:j};});})
       .then(function(res){ btn.disabled=false; st.textContent='';
@@ -262,7 +298,8 @@
     btn.disabled=true; st.textContent='Starting…';
     fetch('/api/animate',{method:'POST',headers:{'Content-Type':'application/json'},
       body:JSON.stringify({ characterImageUrl:comboUrl,
-        action:motion, scene:document.getElementById('du-scene').value.trim() })})
+        action:motion, scene:document.getElementById('du-scene').value.trim(),
+        duration:document.getElementById('du-duration').value })})
       .then(function(x){return x.json().then(function(j){return {ok:x.ok,j:j};});})
       .then(function(res){ if(!res.ok){btn.disabled=false; st.textContent=res.j.error||'Failed'; window.toast(res.j.error||'Failed'); return;}
         st.textContent='Rendering… (1–3 min)';
@@ -323,6 +360,60 @@
   }
   document.getElementById('du-talkA').onclick=function(){ makeTalk('A'); };
   document.getElementById('du-talkB').onclick=function(){ makeTalk('B'); };
+
+  /* ---- Story mode: several shots -> a clip each -> assemble into a longer video ---- */
+  var storyShots=[];
+  function renderShots(){
+    var box=document.getElementById('st-list'); box.innerHTML='';
+    var total=0;
+    storyShots.forEach(function(s,i){ total+=+s.dur;
+      var d=document.createElement('div'); d.className='hint'; d.style.margin='4px 0';
+      d.innerHTML='<b>Shot '+(i+1)+'</b> ('+s.dur+'s): '+ (s.action||'—') + (s.scene?' · '+s.scene:'') + ' &nbsp;<span style="cursor:pointer;color:#b00">✕ remove</span>';
+      d.querySelector('span').onclick=function(){ storyShots.splice(i,1); renderShots(); };
+      box.appendChild(d);
+    });
+    if(storyShots.length){ var t=document.createElement('div'); t.className='hint'; t.innerHTML='<b>Total ≈ '+total+'s</b> across '+storyShots.length+' shots'; box.appendChild(t); }
+  }
+  document.getElementById('st-add').onclick=function(){
+    var action=document.getElementById('st-action').value.trim();
+    var scene=document.getElementById('st-scene').value.trim();
+    if(!action){ window.toast('Describe what happens in this shot'); return; }
+    storyShots.push({ action:action, scene:scene, dur:document.getElementById('st-dur').value });
+    document.getElementById('st-action').value=''; document.getElementById('st-scene').value='';
+    renderShots();
+  };
+  document.getElementById('st-make').onclick=async function(){
+    if(!imgA||!imgB){ window.toast('Pick a shot for both characters (section 1)'); return; }
+    if(!storyShots.length){ window.toast('Add at least one shot'); return; }
+    var st=document.getElementById('st-status'), gallery=document.getElementById('st-gallery'), btn=this;
+    gallery.innerHTML=''; btn.disabled=true;
+    for(var i=0;i<storyShots.length;i++){
+      var s=storyShots[i];
+      st.textContent='Shot '+(i+1)+'/'+storyShots.length+': composing…';
+      try{
+        // 1) compose a still for this shot (characters + products + this scene/action)
+        var cres=await fetch('/api/combine',{method:'POST',headers:{'Content-Type':'application/json'},
+          body:JSON.stringify({ imageA:imgA, imageB:imgB, action:s.action, scene:s.scene,
+            outfitA:document.getElementById('du-outfitA').value.trim(), outfitB:document.getElementById('du-outfitB').value.trim(),
+            framing:document.getElementById('du-framing').value, products:duProducts,
+            productNote:document.getElementById('du-prodnote').value.trim(), aspect:document.getElementById('du-aspect').value })});
+        var cj=await cres.json(); if(!cres.ok) throw new Error(cj.error||'compose failed');
+        st.textContent='Shot '+(i+1)+'/'+storyShots.length+': rendering clip…';
+        // 2) animate that still
+        var ares=await fetch('/api/animate',{method:'POST',headers:{'Content-Type':'application/json'},
+          body:JSON.stringify({ characterImageUrl:cj.imageUrl, action:s.action, scene:s.scene, duration:s.dur })});
+        var aj=await ares.json(); if(!ares.ok) throw new Error(aj.error||'animate failed');
+        var url=await new Promise(function(resolve,reject){ poll(aj.model,aj.requestId,st,function(err,u){ if(err)reject(err); else resolve(u); },'/api/animate-status'); });
+        var card=document.createElement('div');
+        card.innerHTML='<video src="'+url+'" controls playsinline style="width:100%;border:1px solid var(--line);border-radius:10px;background:#000"></video>'+
+          '<div class="hint" style="margin:6px 0 4px">Shot '+(i+1)+' · '+s.dur+'s</div>'+
+          '<a class="btn btn-ghost btn-sm" href="'+url+'" download="shot-'+(i+1)+'.mp4">Download shot '+(i+1)+'</a>';
+        gallery.appendChild(card);
+      }catch(e){ window.toast('Shot '+(i+1)+': '+String(e.message||e)); st.textContent='Shot '+(i+1)+' failed: '+String(e.message||e); }
+    }
+    btn.disabled=false; st.textContent='Storyboard done — download the shots in order and stitch in CapCut';
+    window.toast('Storyboard ready');
+  };
 })();
 </script>
 </body>
