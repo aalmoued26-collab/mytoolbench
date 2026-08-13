@@ -262,8 +262,8 @@ async function ep_voice_clone(b) {
 const VOICE_PRESETS = {
   ar_grandmother: { name: 'Arabic Grandmother — warm', language: 'ar', description: 'Elderly Arabic-speaking woman, around 70 years old, warm and gentle, slightly raspy, slow and measured, kind and reassuring, Gulf (Khaleeji) accent.', sample: 'يا حبيبي، تعال قرّب واجلس بجانبي، خليني أحكي لك قصة من زمان جميل، أيام الطيبين، لما كنا نصنع السمبوسة بأيدينا في البيت بكل حب وبركة.' },
   ar_grandfather: { name: 'Arabic Grandfather — wise', language: 'ar', description: 'Elderly Arabic-speaking man, around 75, warm and wise, deep and calm, slow measured pace, Gulf accent.', sample: 'يا ولدي، اسمع كلام جدّك جيداً، الأصالة لا تروح والطعم الأصيل يبقى في القلب، تعلّمنا الصبر والكرم من آبائنا وأجدادنا في هذه الأرض الطيبة.' },
-  ar_boy: { name: 'Arabic Boy — playful', language: 'ar', description: 'Young Arabic-speaking boy, about 8 years old, cheerful, playful, energetic, bright high-pitched voice.', sample: 'ماما، أنا جوعان كثير! أبغى سمبوسة ماما نورة، هي ألذّ سمبوسة في الدنيا كلها! تعالوا بسرعة نجهّز السفرة ونأكل كلنا مع بعض ونفرح!' },
-  ar_girl: { name: 'Arabic Girl — sweet', language: 'ar', description: 'Young Arabic-speaking girl, about 8 years old, sweet, bright, playful and happy.', sample: 'تعالوا نساعد ماما نورة في المطبخ! أنا أحبّ أشوفها وهي تصنع الأكل اللذيذ، رائحته تملأ البيت كله، وكل ما نجتمع حوالي السفرة نضحك ونفرح مع بعض.' },
+  ar_boy: { name: 'Arabic — Playful &amp; upbeat', language: 'ar', description: 'A lively, playful, upbeat and energetic youthful Arabic-speaking male voice, bright and cheerful, friendly and fun.', sample: 'أهلاً فيكم! تعالوا نجرّب الطعم اللذيذ من ماما نورة، مقرمش وشهي ومصنوع بحب، تعالوا نفرح ونستمتع مع بعض حول السفرة.' },
+  ar_girl: { name: 'Arabic — Bright &amp; sweet', language: 'ar', description: 'A bright, sweet, cheerful and playful youthful Arabic-speaking female voice, light and upbeat, warm and friendly.', sample: 'أهلاً وسهلاً فيكم! خليني أوريكم الطعم الأصيل من ماما نورة، لذيذ ومصنوع بحب، جرّبوه اليوم ورح تحبوه من أول قضمة.' },
   ar_young_woman: { name: 'Arabic Young Woman — friendly', language: 'ar', description: 'Young adult Arabic-speaking woman, bright, friendly and upbeat, natural conversational pace, Levantine accent.', sample: 'أهلاً وسهلاً فيكم! خليني أوريكم المنتج الجديد اللي الكل يحكي عنه، طعمه أصيل ومصنوع بحب، جرّبوه اليوم وأنا متأكدة إنكم رح تحبوه من أول قضمة.' },
   ar_young_man: { name: 'Arabic Young Man — confident', language: 'ar', description: 'Young adult Arabic-speaking man, confident, friendly and modern, clear natural delivery.', sample: 'جرّب الطعم الأصيل من ماما نورة، جودة عالية ونكهة من قلب التراث، صنع في الكويت بكل فخر، اطلبه الآن وعيش تجربة لا تُنسى مع كل قضمة لذيذة.' },
   ar_announcer: { name: 'Arabic Announcer — bold', language: 'ar', description: 'Confident adult Arabic male voice, rich and resonant, energetic broadcast-announcer delivery, Modern Standard Arabic.', sample: 'عرض حصري لفترة محدودة! لا تفوّت الفرصة واحصل على منتجات ماما نورة الأصيلة، طعم التراث في كل قضمة، اطلب الآن قبل نفاد الكمية، الجودة التي تستحقها.' },
@@ -276,7 +276,16 @@ async function ep_voice_design(b) {
   const name = b.name || (p && p.name) || 'Custom voice';
   const language = b.language || (p && p.language) || 'ar';
   const sampleText = b.sampleText || (p && p.sample) || 'مرحباً بكم، هذا صوت تجريبي لعرض النبرة والأسلوب، نتمنى أن ينال إعجابكم ويكون مناسباً لمشروعكم القادم بإذن الله.';
-  const v = await designVoice({ name, description, sampleText });
+  let v;
+  try {
+    v = await designVoice({ name, description, sampleText });
+  } catch (err) {
+    const m = String(err.message || err);
+    if (/blocked|safety|forbidden|minor/i.test(m)) {
+      return json(400, { error: 'ElevenLabs blocked this voice for safety reasons (it may sound like a minor, or the wording was flagged). Pick a different preset or reword the description — child/kid voices are not allowed by ElevenLabs.' });
+    }
+    return json(500, { error: m });
+  }
   return json(200, { voiceId: v.voiceId, name, language, previewDataUrl: v.previewAudio && v.previewAudio.length ? bufferToDataUrl(v.previewAudio, 'audio/mpeg') : null });
 }
 async function ep_voices_list() { return json(200, { voices: await listVoices() }); }

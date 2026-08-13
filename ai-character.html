@@ -73,8 +73,8 @@
           <option value="">— choose a voice —</option>
           <option value="ar_grandmother">Arabic Grandmother — warm</option>
           <option value="ar_grandfather">Arabic Grandfather — wise</option>
-          <option value="ar_boy">Arabic Boy — playful</option>
-          <option value="ar_girl">Arabic Girl — sweet</option>
+          <option value="ar_boy">Arabic — Playful &amp; upbeat (youthful)</option>
+          <option value="ar_girl">Arabic — Bright &amp; sweet (youthful)</option>
           <option value="ar_young_woman">Arabic Young Woman — friendly</option>
           <option value="ar_young_man">Arabic Young Man — confident</option>
           <option value="ar_announcer">Arabic Announcer — bold</option>
@@ -149,9 +149,21 @@
   var voiceId=null, voiceName=null;
   function fillVoices(){ window.TBVoices.fill(document.getElementById('ac-voiceSel'), { firstLabel:'— none —' }); }
   fillVoices();
-  document.getElementById('ac-voiceSel').onchange=function(){ voiceId=this.value||null; voiceName=this.selectedOptions[0]?this.selectedOptions[0].textContent:null; };
+  document.getElementById('ac-voiceSel').onchange=function(){
+    voiceId=this.value||null; voiceName=this.selectedOptions[0]?this.selectedOptions[0].textContent:null;
+    var st=document.getElementById('ac-voicestatus');
+    if(voiceId){ st.textContent='✓ Using '+(voiceName||'voice'); window.toast('Voice assigned: '+(voiceName||'voice')+' — it saves with the character'); }
+    else { st.textContent=''; }
+  };
   document.getElementById('ac-voice-go').onclick=function(){
-    var preset=document.getElementById('ac-preset').value; if(!preset){window.toast('Choose a preset voice');return;}
+    var preset=document.getElementById('ac-preset').value;
+    if(!preset){
+      // no preset chosen — if a saved voice is picked on the right, just confirm that
+      var sv=document.getElementById('ac-voiceSel').value;
+      if(sv){ voiceId=sv; voiceName=document.getElementById('ac-voiceSel').selectedOptions[0].textContent;
+        document.getElementById('ac-voicestatus').textContent='✓ Using '+voiceName; window.toast('Voice assigned: '+voiceName); return; }
+      window.toast('Pick a preset voice on the left, or a saved voice on the right'); return;
+    }
     var label=document.getElementById('ac-preset').selectedOptions[0].textContent;
     var st=document.getElementById('ac-voicestatus'), btn=this; btn.disabled=true; st.textContent='Creating… 10–30s.';
     fetch('/api/voice-design',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({preset:preset})})
