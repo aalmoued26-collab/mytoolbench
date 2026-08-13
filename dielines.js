@@ -134,10 +134,11 @@
       var fcx=xFront+W/2;
       p.push('<rect x="'+r(xFront+4)+'" y="'+r(y0+4)+'" width="'+r(W-8)+'" height="'+r(H-8)+'" rx="3" fill="none" stroke="'+accent+'" stroke-width="0.7"/>');
       if(spec.logoImg){ p.push('<image href="'+spec.logoImg+'" x="'+r(fcx-W*0.30)+'" y="'+r(y0+H*0.09)+'" width="'+r(W*0.60)+'" height="'+r(W*0.60)+'" preserveAspectRatio="xMidYMid meet"/>'); }
-      p.push(t(fcx, y0+H*0.56, name, 8, tc,'middle',isAr(name),'bold'));
-      p.push('<rect x="'+r(xFront+W*0.17)+'" y="'+r(y0+H*0.60)+'" width="'+r(W*0.66)+'" height="'+r(H*0.22)+'" rx="2" fill="#ffffff" opacity="0.12" stroke="'+accent+'" stroke-width="0.4" stroke-dasharray="2 2"/>');
-      p.push(t(fcx, y0+H*0.72, 'YOUR PRODUCT PHOTO', 3.2, tc,'middle'));
-      p.push(t(fcx, y0+H*0.90, netWeight, 4.4, accent,'middle',false,'bold'));
+      p.push(t(fcx, y0+H*0.54, name, 8, tc,'middle',isAr(name),'bold'));
+      var phx=xFront+W*0.15, phy=y0+H*0.58, phw=W*0.70, phh=H*0.26;
+      if(spec.productImg){ p.push('<rect x="'+r(phx)+'" y="'+r(phy)+'" width="'+r(phw)+'" height="'+r(phh)+'" rx="2" fill="none" stroke="'+accent+'" stroke-width="0.5"/>'); p.push(panelArt(spec.productImg, phx, phy, phw, phh)); }
+      else { p.push('<rect x="'+r(phx)+'" y="'+r(phy)+'" width="'+r(phw)+'" height="'+r(phh)+'" rx="2" fill="#ffffff" opacity="0.12" stroke="'+accent+'" stroke-width="0.4" stroke-dasharray="2 2"/>'); p.push(t(fcx, y0+H*0.71, 'YOUR PRODUCT PHOTO', 3.2, tc,'middle')); }
+      p.push(t(fcx, y0+H*0.92, netWeight, 4.4, accent,'middle',false,'bold'));
     }
 
     /* ---- BACK — full info panel ---- */
@@ -146,18 +147,24 @@
     var yy=by+7;
     p.push(t(xBack+W/2, yy, name, 4.8, '#2a1c10','middle',isAr(name),'bold')); yy+=3.4;
     p.push(t(xBack+W/2, yy, 'Net weight '+netWeight, 3, '#666','middle')); yy+=5;
-    function section(title){ p.push('<rect x="'+r(bx+1.5)+'" y="'+r(yy-3.1)+'" width="'+r(bw-3)+'" height="4.4" rx="0.6" fill="'+bg+'"/>'); p.push(t(bx+3, yy, title, 2.9, tc,'start',isAr(title),'bold')); yy+=5.8; }
-    section('Ingredients · المكوّنات');
+    // header bar: English left (LTR), Arabic right (RTL) — both stay inside the bar
+    function section(en, ar){
+      p.push('<rect x="'+r(bx+1.5)+'" y="'+r(yy-3.1)+'" width="'+r(bw-3)+'" height="4.4" rx="0.6" fill="'+bg+'"/>');
+      p.push(t(bx+3, yy, en, 2.9, tc,'start',false,'bold'));
+      if(ar) p.push(t(bx+bw-3, yy, ar, 2.9, tc,'end',true,'bold'));
+      yy+=5.8;
+    }
+    section('Ingredients','المكوّنات');
     paras(ingredients,52,5).forEach(function(l){ p.push(t(bx+3, yy, l, 2.6,'#333','start',isAr(l))); yy+=3.3; });
     p.push(t(bx+3, yy+0.5, allergens, 2.6,'#8a2b2b','start',isAr(allergens),'bold')); yy+=5.5;
-    section('Nutrition · القيمة الغذائية (per 100 g)');
+    section('Nutrition — per 100 g','القيمة الغذائية');
     nutrition.slice(0,8).forEach(function(row){
       p.push(t(bx+3, yy, row.label, 2.6,'#333','start',isAr(row.label)));
       p.push(t(bx+bw-3, yy, row.value, 2.6,'#333','end'));
       p.push('<line x1="'+r(bx+3)+'" y1="'+r(yy+1)+'" x2="'+r(bx+bw-3)+'" y2="'+r(yy+1)+'" stroke="#e5ddca" stroke-width="0.2"/>'); yy+=3.5;
     });
     yy+=2.5;
-    section('Preparation & storage · التحضير');
+    section('Preparation & storage','التحضير');
     paras(instructions,54,3).forEach(function(l){ p.push(t(bx+3, yy, l, 2.6,'#333','start',isAr(l))); yy+=3.3; });
     paras(storage,54,2).forEach(function(l){ p.push(t(bx+3, yy, l, 2.6,'#333','start',isAr(l))); yy+=3.3; });
     if(showBarcode){ p.push(barcode(bx+bw-30, by+bodyH-2*pad-15, 27, 12)); }
@@ -198,6 +205,20 @@
     p.push(hDim(xBack,y0+bodyH+tuck+6,W,'W '+W+'mm'),hDim(xSide1,y0+bodyH+tuck+12,D,'D '+D+'mm'));
     p.push('<text x="'+r(x0-8)+'" y="'+r(y0+bodyH/2)+'" '+LBL+' transform="rotate(-90 '+r(x0-8)+' '+r(y0+bodyH/2)+')">H '+H+'mm</text>');
     [['BACK',xBack,W],['SIDE',xSide1,D],['FRONT',xFront,W],['SIDE',xSide2,D]].forEach(function(a){ p.push(t(a[1]+a[2]/2, y0-tuck-2, a[0], 3,'#aaa','middle')); });
+
+    /* ---- editable custom text layers (add text / rotate / recolour) ---- */
+    if(Array.isArray(spec.extraTexts)){
+      var PAN={ front:[xFront,W,y0,bodyH], back:[xBack,W,y0,bodyH], left:[xSide1,D,y0,bodyH], right:[xSide2,D,y0,bodyH],
+                top:[topTuckX,W,y0-tuck,tuck], bottom:[botTuckX,W,yb,tuck] };
+      spec.extraTexts.forEach(function(L){
+        if(!L||!L.text) return;
+        var pn=PAN[L.panel]||PAN.front;
+        var px=pn[0]+(L.x==null?50:L.x)/100*pn[1];
+        var py=pn[2]+(L.y==null?50:L.y)/100*pn[3];
+        var sz=+L.size||6, rot=+L.rot||0, col=L.color||tc;
+        p.push('<text x="'+r(px)+'" y="'+r(py)+'" font-family="Arial,Helvetica,sans-serif" font-size="'+sz+'" fill="'+col+'" text-anchor="middle" font-weight="bold"'+(isAr(L.text)?' direction="rtl"':'')+' transform="rotate('+rot+' '+r(px)+' '+r(py)+')">'+esc(L.text)+'</text>');
+      });
+    }
 
     return wrap(totalW,totalH,{style:spec.style||'straight_tuck_end',width_mm:W,depth_mm:D,height_mm:H,material:spec.material,title:spec.title||'Packaging design'}, p.join(''));
   };

@@ -280,6 +280,20 @@ async function ep_voice_design(b) {
   return json(200, { voiceId: v.voiceId, name, language, previewDataUrl: v.previewAudio && v.previewAudio.length ? bufferToDataUrl(v.previewAudio, 'audio/mpeg') : null });
 }
 async function ep_voices_list() { return json(200, { voices: await listVoices() }); }
+async function ep_voice_tts(b) {
+  if (!b.text || !b.text.trim()) return json(400, { error: 'text is required' });
+  if (b.text.length > 1500) return json(400, { error: 'text too long — keep under 1500 characters' });
+  const audio = await tts({ voiceId: b.voiceId, text: b.text, language: b.language || undefined });
+  return json(200, { audioDataUrl: bufferToDataUrl(audio, 'audio/mpeg') });
+}
+async function ep_voice_sts(b) {
+  if (!b.audioDataUrl) return json(400, { error: 'audioDataUrl is required' });
+  const { buffer, mime } = decodeDataUrl(b.audioDataUrl);
+  if (!buffer || !buffer.length) return json(400, { error: 'could not read the audio' });
+  if (buffer.length > 12 * 1024 * 1024) return json(413, { error: 'audio too large (max 12 MB) — use a shorter clip' });
+  const audio = await speechToSpeech({ voiceId: b.voiceId, audioBuffer: buffer, mime: mime || 'audio/mpeg' });
+  return json(200, { audioDataUrl: bufferToDataUrl(audio, 'audio/mpeg') });
+}
 
 /* =========================================================================
    ROUTER — dispatch on the last path segment of /api/<endpoint>
@@ -297,6 +311,8 @@ const ROUTES = {
   'voice-clone': ep_voice_clone,
   'voice-design': ep_voice_design,
   'voices-list': ep_voices_list,
+  'voice-tts': ep_voice_tts,
+  'voice-sts': ep_voice_sts,
 };
 
 exports.handler = async (event) => {

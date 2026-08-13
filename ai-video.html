@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AI Video Voiceover &amp; Character Clips — Toolbench</title>
+<meta name="description" content="Upload your vlog and give it a character voiceover — Mama Noura or any voice — by speech-to-speech or script, then add character clips. Free.">
+<link rel="canonical" href="https://mytoolbench.co/ai-video">
+<meta name="robots" content="index,follow">
+<meta property="og:title" content="AI Video Voiceover & Character Clips — Toolbench">
+<meta property="og:description" content="Give your vlog a character voiceover and add character clips. Free.">
+<meta property="og:url" content="https://mytoolbench.co/ai-video">
+<meta property="og:site_name" content="Toolbench">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect x='4' y='4' width='24' height='24' rx='6' fill='none' stroke='%2316171B' stroke-width='3'/><rect x='11' y='11' width='10' height='10' rx='2' fill='%232B41D8'/></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="site-header"></div>
+
+<main class="wrap page">
+  <p class="crumb"><a href="index.html">Toolbench</a> &nbsp;/&nbsp; AI Studio &nbsp;/&nbsp; AI Video Voiceover</p>
+  <div class="tool-head rise"><span class="chip">AI Studio · Free</span></div>
+  <h1 class="title rise d1">AI Video Voiceover &amp; Character Clips</h1>
+  <p class="subtitle rise d2">Upload a vlog or short video and give it a character voiceover — Mama Noura or any voice — by converting your own voice (speech-to-speech) or a typed script. Then add character clips to cut in.</p>
+
+  <div class="rise d3">
+  <div class="panel">
+    <p class="panel-label">1 · Upload your video</p>
+    <input type="file" id="vv-file" accept="video/*" style="padding:10px">
+    <p class="hint">A short clip works best (under ~1 minute, under 60&nbsp;MB). Everything happens in your browser; your video isn't stored.</p>
+    <video id="vv-video" controls playsinline style="width:100%;max-width:360px;border:1px solid var(--line);border-radius:10px;background:#000;margin-top:12px;display:none"></video>
+  </div>
+
+  <div class="panel">
+    <p class="panel-label">2 · The voiceover</p>
+    <div class="row">
+      <div><label class="field">Character voice</label><select id="vo-voice"><option value="">— choose a voice —</option></select></div>
+      <div><label class="field">Language (optional)</label><input type="text" id="vo-lang" placeholder="ar / en"></div>
+    </div>
+    <div class="row" style="margin-top:12px">
+      <div><label class="check on" id="vo-m-tts"><input type="radio" name="vomode" value="tts" checked> Type a script (text → the character reads it)</label></div>
+      <div><label class="check" id="vo-m-sts"><input type="radio" name="vomode" value="sts"> Convert my video's voice (speech-to-speech)</label></div>
+    </div>
+    <div class="row" style="margin-top:12px" id="vo-scriptRow">
+      <div><label class="field">Script</label><textarea id="vo-script" style="min-height:70px" dir="auto" placeholder="What should the character say over the video?"></textarea></div>
+    </div>
+    <div class="controls">
+      <button class="btn btn-primary" id="vo-make">Make voiceover</button>
+      <span class="hint" id="vo-status" style="margin:0;align-self:center"></span>
+    </div>
+    <audio id="vo-audio" controls style="width:100%;margin-top:10px;display:none"></audio>
+
+    <div id="vo-out" style="display:none;margin-top:14px;border-top:1px solid var(--line);padding-top:14px">
+      <p class="hint" style="margin-top:0">Preview plays your video with the new voice. Then download the finished video, or just the voice track to drop into CapCut.</p>
+      <div class="controls">
+        <button class="btn btn-primary btn-sm" id="vo-preview">▶ Preview with new voice</button>
+        <button class="btn btn-primary btn-sm" id="vo-render">Download video with new voice</button>
+        <a class="btn btn-ghost btn-sm" id="vo-dlaudio" download="voiceover.mp3">Download voice only (mp3)</a>
+        <span class="hint" id="vo-rstatus" style="margin:0;align-self:center"></span>
+      </div>
+      <video id="vo-result" controls playsinline style="width:100%;max-width:360px;border:1px solid var(--line);border-radius:10px;background:#000;margin-top:12px;display:none"></video>
+      <div class="controls" id="vo-dlrow" style="display:none"><a class="btn btn-ghost btn-sm" id="vo-dlvideo" download="video-with-voiceover.webm">Download the rendered video</a></div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <p class="panel-label">3 · Add a character clip to cut in <span style="color:var(--faint)">(talking / cooking / walking)</span></p>
+    <div class="row">
+      <div><label class="field">Saved character</label><select id="cc-char"><option value="">— saved character —</option></select>
+        <div id="cc-shots" class="checks" style="margin-top:8px"></div></div>
+      <div><label class="field">Clip type</label>
+        <select id="cc-type"><option value="talking">Talking (lip-synced to a voice)</option><option value="action">Action (cooking / walking / etc.)</option></select></div>
+    </div>
+    <div class="row" style="margin-top:12px">
+      <div id="cc-scriptRow"><label class="field">What they say</label><textarea id="cc-script" style="min-height:56px" dir="auto" placeholder="Their line…"></textarea></div>
+      <div id="cc-actionRow" style="display:none"><label class="field">What they're doing</label><input type="text" id="cc-action" placeholder="e.g. cooking samosas in a modern kitchen, walking and talking to camera"></div>
+      <div><label class="field">Voice (for talking)</label><select id="cc-voice"><option value="">— choose a voice —</option></select></div>
+    </div>
+    <div class="controls">
+      <button class="btn btn-primary" id="cc-make">Generate character clip</button>
+      <span class="hint" id="cc-status" style="margin:0;align-self:center"></span>
+    </div>
+    <video id="cc-video" controls playsinline style="width:100%;max-width:360px;border:1px solid var(--line);border-radius:10px;background:#000;margin-top:12px;display:none"></video>
+    <div class="controls" id="cc-dlrow" style="display:none"><a class="btn btn-ghost btn-sm" id="cc-dl" download="character-clip.mp4">Download clip</a></div>
+    <p class="hint">This makes a standalone character clip. Cut it into your vlog (CapCut works on your phone), or use it as a picture-in-picture. Note: AI can't paint a character into footage you already filmed — this gives you the character as its own realistic clip to edit in.</p>
+  </div>
+  </div>
+
+  <div class="ad-slot"><div class="ph">AD SLOT &mdash; add your AdSense code here</div></div>
+  <section class="prose" style="margin-top:40px">
+    <h2>About the video voiceover tool</h2>
+    <p>Upload a short video, pick a character voice, and either type what the character should say or convert your own recorded voice into the character's voice (speech-to-speech). The tool builds the voiceover and lets you preview it over your video and download a finished file — all in your browser. You can also generate standalone character clips (talking, cooking, walking) to cut into your video. Voice features use ElevenLabs and need a paid plan for cloning and speech-to-speech.</p>
+  </section>
+</main>
+<div id="site-footer"></div>
+<script src="app.js"></script>
+<script src="tb-store.js"></script>
+<script src="tb-voices.js"></script>
+<script>
+(function(){
+  var videoURL=null, voiceAudioUrl=null, charImg=null;
+  var vv=document.getElementById('vv-video');
+
+  document.getElementById('vv-file').onchange=function(e){
+    var f=e.target.files[0]; if(!f) return;
+    if(f.size>80*1024*1024){ window.toast('Please use a video under 80 MB'); return; }
+    videoURL=URL.createObjectURL(f); vv.src=videoURL; vv.style.display='';
+  };
+
+  // voice pickers
+  window.TBVoices.fill(document.getElementById('vo-voice'), { firstLabel:'— choose a voice —' });
+  window.TBVoices.fill(document.getElementById('cc-voice'), { firstLabel:'— choose a voice —' });
+
+  // characters
+  (function(){ var sel=document.getElementById('cc-char'); var list=window.TBStore.listCharacters();
+    sel.innerHTML='<option value="">— saved character —</option>'+list.map(function(c){return '<option value="'+c.id+'">'+(c.name||'Character')+'</option>';}).join('');
+    sel.onchange=function(){ var c=window.TBStore.getCharacter(this.value); var box=document.getElementById('cc-shots'); box.innerHTML=''; charImg=null;
+      if(c&&c.voiceId){ document.getElementById('cc-voice').value=c.voiceId; }
+      if(!c||!c.shots) return;
+      c.shots.forEach(function(s,i){ var b=document.createElement('button'); b.className='check'; b.style.padding='4px';
+        b.innerHTML='<img src="'+s.url+'" style="width:56px;height:56px;object-fit:cover;border-radius:6px">';
+        b.onclick=function(){ charImg=s.url; box.querySelectorAll('button').forEach(function(x){x.classList.remove('on');}); b.classList.add('on'); };
+        box.appendChild(b); if(i===0) b.click(); });
+    };
+  })();
+
+  // toggle script/convert
+  document.querySelectorAll('input[name="vomode"]').forEach(function(r){ r.onchange=function(){
+    document.getElementById('vo-scriptRow').style.display = this.value==='tts' ? '' : 'none';
+    document.getElementById('vo-m-tts').classList.toggle('on', this.value==='tts');
+    document.getElementById('vo-m-sts').classList.toggle('on', this.value==='sts');
+  };});
+  document.getElementById('cc-type').onchange=function(){
+    var talking=this.value==='talking';
+    document.getElementById('cc-scriptRow').style.display=talking?'':'none';
+    document.getElementById('cc-actionRow').style.display=talking?'none':'';
+  };
+
+  function blobToDataUrl(blob){ return new Promise(function(res){ var fr=new FileReader(); fr.onload=function(){res(fr.result);}; fr.readAsDataURL(blob); }); }
+
+  // record the uploaded video's own audio track (for speech-to-speech)
+  function captureVideoAudio(){
+    return new Promise(function(res,rej){
+      var stream = vv.captureStream ? vv.captureStream() : (vv.mozCaptureStream ? vv.mozCaptureStream() : null);
+      if(!stream){ rej(new Error('This browser can’t read the video audio — use the script option instead')); return; }
+      var atracks=stream.getAudioTracks(); if(!atracks.length){ rej(new Error('No audio track found in the video')); return; }
+      var rec=new MediaRecorder(new MediaStream(atracks)); var chunks=[];
+      rec.ondataavailable=function(e){ if(e.data.size) chunks.push(e.data); };
+      rec.onstop=function(){ res(new Blob(chunks,{type:chunks[0]?chunks[0].type:'audio/webm'})); };
+      vv.muted=true; vv.currentTime=0;
+      vv.onended=function(){ try{rec.stop();}catch(_){}; vv.onended=null; };
+      rec.start(); vv.play();
+    });
+  }
+
+  document.getElementById('vo-make').onclick=async function(){
+    if(!videoURL){ window.toast('Upload a video first'); return; }
+    var voiceId=document.getElementById('vo-voice').value; if(!voiceId){ window.toast('Choose a character voice'); return; }
+    var mode=document.querySelector('input[name="vomode"]:checked').value;
+    var st=document.getElementById('vo-status'), btn=this; btn.disabled=true;
+    try{
+      var body, url;
+      if(mode==='tts'){
+        var script=document.getElementById('vo-script').value.trim();
+        if(!script){ window.toast('Type the script'); btn.disabled=false; return; }
+        st.textContent='Generating voice…';
+        body={ voiceId:voiceId, text:script, language:document.getElementById('vo-lang').value.trim()||undefined };
+        url='/api/voice-tts';
+      } else {
+        st.textContent='Reading your video’s audio…';
+        var ab=await captureVideoAudio();
+        st.textContent='Converting to the character voice…';
+        body={ voiceId:voiceId, audioDataUrl:await blobToDataUrl(ab) };
+        url='/api/voice-sts';
+      }
+      var res=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+      var j=await res.json(); if(!res.ok) throw new Error(j.error||'Voice failed');
+      voiceAudioUrl=j.audioDataUrl;
+      var a=document.getElementById('vo-audio'); a.src=voiceAudioUrl; a.style.display='';
+      document.getElementById('vo-dlaudio').href=voiceAudioUrl;
+      document.getElementById('vo-out').style.display=''; st.textContent='Voice ready';
+      window.toast('Voiceover ready — preview or download');
+    }catch(e){ st.textContent=String(e.message||e); window.toast(String(e.message||e)); }
+    btn.disabled=false;
+  };
+
+  document.getElementById('vo-preview').onclick=function(){
+    if(!voiceAudioUrl){ return; } vv.muted=true; vv.currentTime=0;
+    var a=document.getElementById('vo-audio'); a.currentTime=0;
+    vv.play(); a.play();
+  };
+
+  // Render a combined video (canvas frames + new audio) with MediaRecorder — no server, no ffmpeg
+  document.getElementById('vo-render').onclick=async function(){
+    if(!voiceAudioUrl){ return; }
+    var st=document.getElementById('vo-rstatus'), btn=this; btn.disabled=true; st.textContent='Rendering… (plays through once)';
+    try{
+      var v=document.createElement('video'); v.src=videoURL; v.muted=true; v.playsInline=true;
+      await new Promise(function(res){ v.onloadedmetadata=res; });
+      var w=v.videoWidth||720, h=v.videoHeight||1280;
+      var cv=document.createElement('canvas'); cv.width=w; cv.height=h; var cx=cv.getContext('2d');
+      var cstream=cv.captureStream(30);
+      var ac=new (window.AudioContext||window.webkitAudioContext)();
+      var aud=new Audio(voiceAudioUrl); var srcN=ac.createMediaElementSource(aud); var dest=ac.createMediaStreamDestination(); srcN.connect(dest);
+      var mixed=new MediaStream(cstream.getVideoTracks().concat(dest.stream.getAudioTracks()));
+      var mime=MediaRecorder.isTypeSupported('video/webm;codecs=vp9,opus')?'video/webm;codecs=vp9,opus':'video/webm';
+      var rec=new MediaRecorder(mixed,{mimeType:mime}); var chunks=[];
+      rec.ondataavailable=function(e){ if(e.data.size) chunks.push(e.data); };
+      var stopped=new Promise(function(res){ rec.onstop=res; });
+      rec.start(100);
+      v.currentTime=0; aud.currentTime=0; await v.play(); aud.play();
+      (function draw(){ if(v.paused||v.ended) return; cx.drawImage(v,0,0,w,h); requestAnimationFrame(draw); })();
+      await new Promise(function(res){ v.onended=res; });
+      try{ rec.stop(); }catch(_){}; aud.pause(); await stopped;
+      var blob=new Blob(chunks,{type:'video/webm'}); var out=URL.createObjectURL(blob);
+      var rv=document.getElementById('vo-result'); rv.src=out; rv.style.display='';
+      document.getElementById('vo-dlvideo').href=out; document.getElementById('vo-dlrow').style.display='';
+      st.textContent='Done'; window.toast('Video ready — download below');
+    }catch(e){ st.textContent=String(e.message||e); window.toast('Render failed — you can still download the voice track'); }
+    btn.disabled=false;
+  };
+
+  // ---- character clip (talking or action) ----
+  function poll(model, requestId, st, done){
+    var tries=0; var iv=setInterval(function(){ tries++;
+      fetch('/api/generate-status',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:model,requestId:requestId})})
+        .then(function(x){return x.json();})
+        .then(function(j){ if(j.status==='done'){clearInterval(iv);done(null,j.videoUrl);}
+          else if(j.status==='failed'||j.error){clearInterval(iv);done(new Error(j.error||'Failed'));}
+          else { st.textContent='Rendering… ('+(tries*5)+'s)'; if(tries>=90){clearInterval(iv);done(new Error('Timed out'));} } })
+        .catch(function(){}); },5000);
+  }
+  document.getElementById('cc-make').onclick=function(){
+    if(!charImg){ window.toast('Pick a character and a shot'); return; }
+    var type=document.getElementById('cc-type').value;
+    var st=document.getElementById('cc-status'), btn=this; btn.disabled=true; st.textContent='Starting…';
+    var body;
+    if(type==='talking'){
+      var voiceId=document.getElementById('cc-voice').value; var script=document.getElementById('cc-script').value.trim();
+      if(!voiceId){ window.toast('Choose a voice'); btn.disabled=false; return; }
+      if(!script){ window.toast('Type what they say'); btn.disabled=false; return; }
+      body={ mode:'talking', characterImageUrl:charImg, voiceId:voiceId, script:script };
+    } else {
+      body={ mode:'action', characterImageUrl:charImg, action:document.getElementById('cc-action').value.trim() };
+    }
+    fetch('/api/generate-start',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)})
+      .then(function(x){return x.json().then(function(j){return {ok:x.ok,j:j};});})
+      .then(function(res){ if(!res.ok){ btn.disabled=false; st.textContent=res.j.error||'Failed'; window.toast(res.j.error||'Failed'); return; }
+        st.textContent='Rendering… (1–3 min)';
+        poll(res.j.model,res.j.requestId,st,function(err,url){ btn.disabled=false;
+          if(err){ st.textContent=String(err.message||err); window.toast(String(err.message||err)); return; }
+          st.textContent='Done'; var v=document.getElementById('cc-video'); v.src=url; v.style.display='';
+          document.getElementById('cc-dl').href=url; document.getElementById('cc-dlrow').style.display=''; window.toast('Clip ready');
+        });
+      }).catch(function(e){ btn.disabled=false; st.textContent=String(e); window.toast('Network error'); });
+  };
+})();
+</script>
+</body>
+</html>

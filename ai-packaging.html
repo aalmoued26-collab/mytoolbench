@@ -106,6 +106,23 @@
       <button class="btn btn-primary btn-sm" id="pk-approve">✓ Approve &amp; refit die-cut</button>
       <a class="btn btn-ghost btn-sm" id="pk-dieDownload" download="die-design.svg">Download SVG</a>
       <span class="hint" style="margin:0;align-self:center">Edit any field above, then Approve to refit · Magenta = cut · blue dashed = fold · grey = 3&nbsp;mm bleed</span></div>
+
+    <div style="margin-top:16px;border-top:1px solid var(--line);padding-top:14px">
+      <p class="panel-label" style="margin-top:0">Add / edit text on any panel <span style="color:var(--faint)">(add, place, rotate, colour)</span></p>
+      <div class="row">
+        <div><label class="field">Text</label><input type="text" id="pk-tx" dir="auto" placeholder="e.g. NEW · جديد · 20% OFF"></div>
+        <div><label class="field">Panel</label><select id="pk-tpanel"><option value="front">Front</option><option value="back">Back</option><option value="left">Left side</option><option value="right">Right side</option><option value="top">Top</option><option value="bottom">Bottom</option></select></div>
+        <div><label class="field">Colour</label><input type="color" id="pk-tcolor" value="#ffffff" style="padding:4px;height:44px"></div>
+      </div>
+      <div class="row" style="margin-top:10px">
+        <div><label class="field">X (0–100%)</label><input type="number" id="pk-tx-x" value="50" min="0" max="100"></div>
+        <div><label class="field">Y (0–100%)</label><input type="number" id="pk-tx-y" value="50" min="0" max="100"></div>
+        <div><label class="field">Size (mm)</label><input type="number" id="pk-tx-size" value="8" min="2" max="60"></div>
+        <div><label class="field">Rotate (°)</label><input type="number" id="pk-tx-rot" value="0" min="-180" max="180"></div>
+        <div><button class="btn btn-primary btn-sm" id="pk-tx-add" style="margin-top:26px">+ Add text</button></div>
+      </div>
+      <div id="pk-tx-list" class="checks" style="margin-top:10px"></div>
+    </div>
   </div>
 
   <div class="panel" id="pk-mockPanel" style="display:none">
@@ -130,7 +147,7 @@
 <script src="dielines.js"></script>
 <script>
 (function(){
-  var colors=['#2B41D8','#16171B'], artworkData=null, pkLogoData=null, approvedFront=null, mockFrontUrl=null;
+  var colors=['#2B41D8','#16171B'], artworkData=null, pkLogoData=null, approvedFront=null, mockFrontUrl=null, extraTexts=[];
   try{ pkLogoData=localStorage.getItem('tb_brand_logo'); }catch(e){}
   document.getElementById('pk-logo').onchange=function(e){ var f=e.target.files[0]; if(!f)return;
     var r=new FileReader(); r.onload=function(){ pkLogoData=r.result; }; r.readAsDataURL(f); };
@@ -173,7 +190,9 @@
       depth_mm:+document.getElementById('pk-d').value||40,
       height_mm:+document.getElementById('pk-h').value||150,
       material:document.getElementById('pk-finish').value,
-      frontImg:(approvedFront||artworkData||pkExampleData||null),   // approved 3D front, else artwork, else example, else from-scratch
+      frontImg:(approvedFront||artworkData||null),   // finished flat artwork, else a clean designed-from-scratch front
+      productImg:(pkProductData||null),               // your product photo goes in the front photo area
+      extraTexts:extraTexts,                          // editable custom text layers
       brandColor:document.getElementById('pk-color').value,
       logoImg:pkLogoData||null,
       productName:v('pk-name')||'Product Name',
@@ -199,9 +218,29 @@
   document.getElementById('pk-dieline').onclick=function(){ buildDie('Full package ready — all six panels'); };
   document.getElementById('pk-approve').onclick=function(){ buildDie('✓ Approved — details refitted onto the die-cut'); };
   document.getElementById('pk-approve3d').onclick=function(){
-    if(!mockFrontUrl && !artworkData && !pkExampleData){ window.toast('Generate the 3D mockup first'); return; }
-    approvedFront = mockFrontUrl || null;   // use the approved front render as the die front
-    buildDie('✓ Design approved — fitted onto the die with all details');
+    approvedFront = null;   // build a CLEAN flat front (logo + name + your product photo), not the 3D studio photo
+    buildDie('✓ Approved — clean die built with your logo, product photo & all details');
+  };
+  // ---- editable custom text layers (add / place / rotate / colour / remove) ----
+  function escTx(s){ return String(s).replace(/[<>&]/g,function(c){return{'<':'&lt;','>':'&gt;','&':'&amp;'}[c];}); }
+  function renderTxList(){
+    var box=document.getElementById('pk-tx-list'); box.innerHTML='';
+    extraTexts.forEach(function(L,idx){
+      var s=document.createElement('span'); s.className='check'; s.style.cursor='pointer';
+      s.innerHTML=escTx(L.text)+' <span style="color:var(--faint)">· '+L.panel+' · '+L.rot+'° ✕</span>';
+      s.title='Click to remove';
+      s.onclick=function(){ extraTexts.splice(idx,1); renderTxList(); buildDie('Text removed'); };
+      box.appendChild(s);
+    });
+  }
+  document.getElementById('pk-tx-add').onclick=function(){
+    var txt=document.getElementById('pk-tx').value.trim(); if(!txt){ window.toast('Type the text first'); return; }
+    extraTexts.push({ text:txt, panel:document.getElementById('pk-tpanel').value,
+      x:+document.getElementById('pk-tx-x').value, y:+document.getElementById('pk-tx-y').value,
+      size:+document.getElementById('pk-tx-size').value, rot:+document.getElementById('pk-tx-rot').value,
+      color:document.getElementById('pk-tcolor').value });
+    document.getElementById('pk-tx').value='';
+    renderTxList(); buildDie('Text added — reposition with X/Y and Rotate, then Download SVG');
   };
   var ANGLES=[
     {label:'Front hero', a:'a three-quarter hero angle showing the FRONT face and the TOP of the box, standing upright'},
