@@ -18,7 +18,7 @@ const EL_HOST = 'https://api.elevenlabs.io';
 const MODELS = {
   character: process.env.FAL_MODEL_CHARACTER || 'fal-ai/nano-banana/edit',
   image:     process.env.FAL_MODEL_IMAGE     || 'fal-ai/flux/dev',
-  talking:   process.env.FAL_MODEL_TALKING   || 'fal-ai/veed/fabric-1.0',
+  talking:   process.env.FAL_MODEL_TALKING   || 'veed/fabric-1.0',
   video:     process.env.FAL_MODEL_VIDEO     || 'fal-ai/kling-video/v2.1/standard/image-to-video',
   packEdit:  process.env.FAL_MODEL_PACK_EDIT || 'fal-ai/nano-banana/edit',
 };
@@ -148,8 +148,12 @@ async function ep_character(b) {
 async function ep_combine(b) {
   if (!b.imageA || !b.imageB) return json(400, { error: 'imageA and imageB are required' });
   const framing = { selfie: 'IMPORTANT — frame this exactly as a LIVE front-facing phone selfie camera stream: our view IS the phone\'s front camera, as if the person is live-streaming to us. One person holds the phone at arm\'s length and looks straight into the lens talking to the camera; the other leans in close beside them. Both faces are large, close and clearly visible, filling a vertical 9:16 frame, slightly high selfie angle, mild wide-angle selfie lens with a little edge distortion, natural indoor lighting, authentic hand-held social-media vlog / live-stream look, photorealistic. ', overshoulder: 'Over-the-shoulder framing, cinematic and candid. ', twoshot: 'A clean two-shot with both people nicely framed side by side. ' }[b.framing] || '';
-  const prompt = 'Create ONE photorealistic photograph that shows BOTH people from the two reference images together in the same scene. Keep each person\'s face, features and identity faithful and recognizable. ' + (b.outfitA ? `The first person is wearing ${b.outfitA}. ` : '') + (b.outfitB ? `The second person is wearing ${b.outfitB}. ` : '') + (b.action ? `They are ${b.action}. ` : 'They are together, interacting naturally. ') + (b.scene ? `Setting / location: ${b.scene}. ` : 'Setting: a warm, richly detailed environment. ') + framing + 'Consistent natural lighting on both, full-frame camera look, cinematic, professional, ultra-detailed, photorealistic. No text, no watermark.';
-  const data = await runFal(MODELS.character, { prompt, image_urls: [b.imageA, b.imageB], image_url: b.imageA, aspect_ratio: b.aspect || '4:5', num_images: 1 });
+  const products = Array.isArray(b.products) ? b.products.filter(Boolean).slice(0, 3) : [];
+  const productLine = products.length
+    ? `Also naturally place the product(s) from the extra reference image(s) into the scene (for example on the table or held in hand) — keep each product's packaging, colours and branding faithful and clearly visible${b.productNote ? ' (' + b.productNote + ')' : ''}. `
+    : '';
+  const prompt = 'Create ONE photorealistic photograph that shows BOTH people from the two reference images together in the same scene. Keep each person\'s face, features and identity faithful and recognizable. ' + (b.outfitA ? `The first person is wearing ${b.outfitA}. ` : '') + (b.outfitB ? `The second person is wearing ${b.outfitB}. ` : '') + (b.action ? `They are ${b.action}. ` : 'They are together, interacting naturally. ') + (b.scene ? `Setting / location: ${b.scene}. ` : 'Setting: a warm, richly detailed environment. ') + productLine + framing + 'Consistent natural lighting, full-frame camera look, cinematic, professional, ultra-detailed, photorealistic. No text, no watermark.';
+  const data = await runFal(MODELS.character, { prompt, image_urls: [b.imageA, b.imageB, ...products], image_url: b.imageA, aspect_ratio: b.aspect || '4:5', num_images: 1 });
   return json(200, { imageUrl: pickImage(data) });
 }
 async function ep_generate_start(b) {
