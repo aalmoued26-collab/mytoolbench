@@ -382,11 +382,12 @@
     document.getElementById('st-action').value=''; document.getElementById('st-scene').value='';
     renderShots();
   };
+  var storyClipUrls=[];
   document.getElementById('st-make').onclick=async function(){
     if(!imgA||!imgB){ window.toast('Pick a shot for both characters (section 1)'); return; }
     if(!storyShots.length){ window.toast('Add at least one shot'); return; }
     var st=document.getElementById('st-status'), gallery=document.getElementById('st-gallery'), btn=this;
-    gallery.innerHTML=''; btn.disabled=true;
+    gallery.innerHTML=''; storyClipUrls=[]; btn.disabled=true;
     for(var i=0;i<storyShots.length;i++){
       var s=storyShots[i];
       st.textContent='Shot '+(i+1)+'/'+storyShots.length+': composing…';
@@ -404,6 +405,7 @@
           body:JSON.stringify({ characterImageUrl:cj.imageUrl, action:s.action, scene:s.scene, duration:s.dur })});
         var aj=await ares.json(); if(!ares.ok) throw new Error(aj.error||'animate failed');
         var url=await new Promise(function(resolve,reject){ poll(aj.model,aj.requestId,st,function(err,u){ if(err)reject(err); else resolve(u); },'/api/animate-status'); });
+        storyClipUrls.push(url);
         var card=document.createElement('div');
         card.innerHTML='<video src="'+url+'" controls playsinline style="width:100%;border:1px solid var(--line);border-radius:10px;background:#000"></video>'+
           '<div class="hint" style="margin:6px 0 4px">Shot '+(i+1)+' · '+s.dur+'s</div>'+
@@ -411,9 +413,47 @@
         gallery.appendChild(card);
       }catch(e){ window.toast('Shot '+(i+1)+': '+String(e.message||e)); st.textContent='Shot '+(i+1)+' failed: '+String(e.message||e); }
     }
-    btn.disabled=false; st.textContent='Storyboard done — download the shots in order and stitch in CapCut';
+    btn.disabled=false;
+    if(storyClipUrls.length>1){
+      st.textContent='Storyboard done — stitch into one video, or download shots';
+      var bar=document.getElementById('st-stitchbar'); if(!bar){ bar=document.createElement('div'); bar.id='st-stitchbar'; bar.className='controls'; bar.style.marginTop='12px'; document.getElementById('st-gallery').parentNode.appendChild(bar); }
+      bar.innerHTML='<button class="btn btn-primary" id="st-stitch">⬇ Stitch all shots into ONE video ('+storyClipUrls.length+' shots)</button><span class="hint" id="st-ststatus" style="margin:0;align-self:center"></span><span id="st-stitchdl"></span>';
+      document.getElementById('st-stitch').onclick=function(){ stitchStory(); };
+    } else { st.textContent='Shot ready'; }
     window.toast('Storyboard ready');
   };
+
+  // Stitch the shot clips into ONE video, in your browser (no server). Falls back
+  // to "download shots and use CapCut" if the browser blocks it.
+  async function stitchStory(){
+    var st=document.getElementById('st-ststatus'), btn=document.getElementById('st-stitch');
+    btn.disabled=true; st.textContent='Preparing clips…';
+    try{
+      var srcs=[];
+      for(var i=0;i<storyClipUrls.length;i++){ var r=await fetch(storyClipUrls[i]); if(!r.ok) throw new Error('fetch clip'); var b=await r.blob(); srcs.push(URL.createObjectURL(b)); }
+      var first=document.createElement('video'); first.src=srcs[0]; await new Promise(function(res){ first.onloadedmetadata=res; });
+      var w=first.videoWidth||720, h=first.videoHeight||1280;
+      var cv=document.createElement('canvas'); cv.width=w; cv.height=h; var cx=cv.getContext('2d');
+      var cstream=cv.captureStream(30);
+      var mime=MediaRecorder.isTypeSupported('video/webm;codecs=vp9')?'video/webm;codecs=vp9':'video/webm';
+      var rec=new MediaRecorder(cstream,{mimeType:mime}); var chunks=[];
+      rec.ondataavailable=function(e){ if(e.data.size)chunks.push(e.data); };
+      var stopped=new Promise(function(res){ rec.onstop=res; }); rec.start(200);
+      for(var k=0;k<srcs.length;k++){
+        st.textContent='Stitching shot '+(k+1)+'/'+srcs.length+'…';
+        var v=document.createElement('video'); v.src=srcs[k]; v.muted=true; v.playsInline=true;
+        await new Promise(function(res){ v.onloadedmetadata=res; });
+        v.currentTime=0; await v.play();
+        await new Promise(function(res){ (function draw(){ if(v.paused||v.ended){res();return;} cx.drawImage(v,0,0,w,h); requestAnimationFrame(draw); })(); v.onended=res; });
+      }
+      rec.stop(); await stopped;
+      var out=URL.createObjectURL(new Blob(chunks,{type:'video/webm'}));
+      document.getElementById('st-stitchdl').innerHTML='<a class="btn btn-ghost btn-sm" href="'+out+'" download="full-vlog.webm" style="margin-left:8px">⬇ Download the full video</a>';
+      st.textContent='Done — one video of all shots';
+      window.toast('Full video ready');
+    }catch(e){ st.textContent='Couldn’t auto-stitch here — download each shot above and combine in CapCut'; window.toast('Auto-stitch not available in this browser'); }
+    btn.disabled=false;
+  }
 })();
 </script>
 </body>
